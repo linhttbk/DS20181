@@ -96,7 +96,7 @@
 
 
     </LinearLayout>
-    <englishrole.aseantech.com.englishrole.DisableTouchView
+    <a20181.ds.com.ds20181.customs.DisableTouchView
         android:visibility="gone"
         android:id="@+id/layoutProgress"
         android:background="@color/transparent_color"
@@ -108,5 +108,5 @@
             android:layout_centerInParent="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-    </englishrole.aseantech.com.englishrole.DisableTouchView>
+    </a20181.ds.com.ds20181.customs.DisableTouchView>
 </RelativeLayout>

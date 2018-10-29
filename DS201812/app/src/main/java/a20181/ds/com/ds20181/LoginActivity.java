@@ -1,5 +1,6 @@
 package a20181.ds.com.ds20181;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,7 +34,6 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
         ButterKnife.bind(this);
-        getSupportActionBar().hide();
         init();
 
     }
@@ -63,35 +63,36 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
 
     @Override
     public void onLoginClick(String username, String password) {
-        layoutProgress.setVisibility(View.VISIBLE);
-        Call<ResponseLogin> result;
-        if (Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
-            result = AppClient.getAPIService().loginWithEmail(username, password);
-        } else {
-            result = AppClient.getAPIService().loginWithUid(username, password);
-
-        }
-        result.enqueue(new Callback<ResponseLogin>() {
-            @Override
-            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
-                layoutProgress.setVisibility(View.GONE);
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        ResponseLogin responses = response.body();
-                        Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseLogin> call, Throwable t) {
-                layoutProgress.setVisibility(View.GONE);
-            }
-        });
+//        layoutProgress.setVisibility(View.VISIBLE);
+//        Call<ResponseLogin> result;
+//        if (Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
+//            result = AppClient.getAPIService().loginWithEmail(username, password);
+//        } else {
+//            result = AppClient.getAPIService().loginWithUid(username, password);
+//
+//        }
+//        result.enqueue(new Callback<ResponseLogin>() {
+//            @Override
+//            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
+//                layoutProgress.setVisibility(View.GONE);
+//                try {
+//                    if (response.isSuccessful() && response.body() != null) {
+//                        ResponseLogin responses = response.body();
+//                        Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseLogin> call, Throwable t) {
+//                layoutProgress.setVisibility(View.GONE);
+//            }
+//        });
+        startActivity(new Intent(this, MainActivity.class));
     }
 
     @Override

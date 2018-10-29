@@ -110,7 +110,7 @@
 
     </LinearLayout>
 
-    <englishrole.aseantech.com.englishrole.DisableTouchView
+    <a20181.ds.com.ds20181.customs.DisableTouchView
         android:id="@+id/layoutProgress"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -123,5 +123,5 @@
             android:layout_centerInParent="true"
             android:indeterminate="true"
             android:indeterminateTint="@color/indeterminate_color" />
-    </englishrole.aseantech.com.englishrole.DisableTouchView>
+    </a20181.ds.com.ds20181.customs.DisableTouchView>
 </RelativeLayout>
