@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    >
+
+
+    <LinearLayout
+        android:background="@android:color/transparent"
+        android:id="@+id/llLogo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_24dp"
+        android:paddingRight="@dimen/padding_24dp">
+
+        <!--<ImageView android:src="@drawable/ic_home"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="72dp"-->
+        <!--android:layout_marginBottom="24dp"-->
+        <!--android:layout_gravity="center_horizontal" />-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/margin_ultra_big"
+            android:gravity="center"
+            android:text="@string/app_name"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold|italic" />
+    </LinearLayout>
+    <!-- Email Label -->
+    <LinearLayout
+        android:background="@android:color/transparent"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/llLogo"
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/padding_24dp"
+        android:paddingRight="@dimen/padding_24dp">
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_8dp"
+            android:layout_marginTop="@dimen/margin_ultra_big">
+
+            <EditText
+                android:id="@+id/input_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_user_name_login"
+                android:inputType="text"
+                android:textColor="@color/white" />
+        </android.support.design.widget.TextInputLayout>
+
+        <!-- Password Label -->
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_8dp"
+            android:layout_marginTop="@dimen/margin_8dp">
+
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:textColor="@color/white" />
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:layout_marginTop="@dimen/margin_large"
+            android:background="@drawable/bg_button_conner"
+            android:padding="@dimen/padding_12dp"
+            android:text="@string/btn_login"
+            android:textColor="@color/white" />
+
+        <TextView
+            android:id="@+id/link_signup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="@string/lbl_sign_up"
+            android:textColor="@color/white"
+            android:textSize="16dip" />
+
+
+    </LinearLayout>
+    <englishrole.aseantech.com.englishrole.DisableTouchView
+        android:visibility="gone"
+        android:id="@+id/layoutProgress"
+        android:background="@color/transparent_color"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ProgressBar
+            android:indeterminateTint="@color/indeterminate_color"
+            android:indeterminate="true"
+            android:layout_centerInParent="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </englishrole.aseantech.com.englishrole.DisableTouchView>
+</RelativeLayout>

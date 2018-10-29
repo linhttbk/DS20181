@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">DS20181</string>
+    <string name="btn_login">Login</string>
+    <string name="lbl_sign_up">No account yet? Create one</string>
+    <string name="hint_user_name">Username</string>
+    <string name="hint_user_name_login">Type email or username</string>
+    <string name="hint_email"> Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_sign_up">Sign Up</string>
+    <string name="back_login_lbl">Back to login</string>
+</resources>
