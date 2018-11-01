@@ -76,7 +76,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                     if (response.isSuccessful() && response.body() != null) {
                         ResponseLogin responses = response.body();
 
-                        if (responses.getCode() == CODE_200) {
+                        if (responses!=null && responses.getCode() == CODE_200) {
                             User user = response.body().getUser();
                             Headers headers = response.headers();
                             String cookie = headers.get("set-cookie");
@@ -89,6 +89,8 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                             Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
                         }
 
+                    }else {
+                        Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception ex) {

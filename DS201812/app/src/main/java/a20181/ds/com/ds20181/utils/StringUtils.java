@@ -1,5 +1,7 @@
 package a20181.ds.com.ds20181.utils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,5 +25,14 @@ public class StringUtils {
         int minutes = totalMinutes % MINUTES_IN_AN_HOUR;
         int hours = totalMinutes / MINUTES_IN_AN_HOUR;
         return hours + " hours " + minutes + " minutes " + seconds + " seconds";
+    }
+
+    public static String formatLongToDate(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return format.format(new Date(time));
+    }
+
+    public static boolean isEmpty(String src) {
+        return src == null || src.equals("");
     }
 }

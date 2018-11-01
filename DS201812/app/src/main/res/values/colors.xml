@@ -13,4 +13,8 @@
     <color name="indeterminate_color">#a40505</color>
     <color name="transparent_color">#87000000</color>
     <color name="divider">#a6a4a4</color>
+    <color name="bg_float_button_red">#f70000</color>
+    <color name="black_semi_transparent">#B2000000</color>
+    <color name="blue_semi_transparent">#805677fc</color>
+    <color name="blue_semi_transparent_pressed">#80738ffe</color>
 </resources>

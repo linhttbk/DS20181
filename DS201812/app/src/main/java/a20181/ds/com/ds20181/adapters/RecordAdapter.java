@@ -42,13 +42,13 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
     class ViewHolder extends RecyclerView.ViewHolder{
 
         @BindView(R.id.tv_recorder_name)
-        private TextView tvRecorderName;
+         TextView tvRecorderName;
 
         @BindView(R.id.tv_recorder_time)
-        private TextView tvRecordTime;
+         TextView tvRecordTime;
 
         @BindView(R.id.tv_record_content)
-        private TextView tvRecordContent;
+         TextView tvRecordContent;
 
         public ViewHolder(View itemView) {
             super(itemView);

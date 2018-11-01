@@ -22,14 +22,14 @@ public class AppState implements AppConstant {
         return instance;
     }
 
-    public  void setCurrentUser(User user) {
+    public void setCurrentUser(User user) {
         if (user == null) return;
         String data = new Gson().toJson(user);
         PrefUtil.savePreferences(MainApplication.getAppContext(), PREF_USER, data);
 
     }
 
-    public static User getCurrentUser() {
+    public User getCurrentUser() {
         Context context = MainApplication.getAppContext();
         if (context == null) return null;
         String user = PrefUtil.getPreferences(context, PREF_USER, EMPTY);

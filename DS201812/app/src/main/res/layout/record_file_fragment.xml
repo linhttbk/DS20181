@@ -1,44 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingLeft="@dimen/padding_12dp"
-    android:paddingRight="@dimen/padding_12dp">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tvLbl"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/padding_4dp"
-        android:paddingTop="@dimen/padding_12dp"
-        android:text="File film" />
-
-    <View
-        android:id="@+id/view1"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_below="@+id/tvLbl"
-        android:background="@color/divider" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcvList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/view1"
         android:layout_marginTop="@dimen/margin_small">
 
     </android.support.v7.widget.RecyclerView>
 
-    <TextView
-        android:id="@+id/tvAdd"
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/margin_large"
-        android:background="@color/red"
-        android:padding="@dimen/padding_12dp"
-        android:text="Tao File phim moi"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_title" />
+        android:layout_marginRight="@dimen/margin_large"
+        app:fab_addButtonColorNormal="@color/bg_float_button_red"
+        app:fab_addButtonColorPressed="@color/bg_float_button_red"
+        app:fab_labelStyle="@style/menu_labels_style"
+        app:fab_labelsPosition="left">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/white"
+            app:fab_colorPressed="#ecefef"
+            app:fab_icon="@drawable/file_film"
+            app:fab_title="Thêm File" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+    <!--<android.support.design.widget.FloatingActionButton-->
+    <!--android:id="@+id/btnAdd"-->
+    <!--android:layout_width="56dp"-->
+    <!--android:layout_height="56dp"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_marginBottom="@dimen/margin_large"-->
+    <!--android:layout_marginRight="@dimen/margin_large"-->
+    <!--android:backgroundTint="@color/bg_float_button_red"-->
+    <!--android:src="@drawable/ic_add_white" />-->
+
 </RelativeLayout>

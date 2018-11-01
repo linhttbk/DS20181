@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_12dp">
+
+    <ImageView
+
+        android:id="@+id/imgFile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/file_film" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_toRightOf="@+id/imgFile"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="The Flash"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_title" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tvTitle"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_toRightOf="@+id/imgFile"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="20/11/2018"
+        android:textSize="@dimen/text_size_normal" />
+    <View
+        android:background="@color/divider"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_below="@+id/tvDate"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"/>
+</RelativeLayout>

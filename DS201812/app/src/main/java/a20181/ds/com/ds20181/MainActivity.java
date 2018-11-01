@@ -11,9 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 
+import a20181.ds.com.ds20181.customs.DisableTouchView;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity
     NavigationView navigationView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawer;
+    @BindView(R.id.disableTouchView)
+    DisableTouchView layoutProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,5 +107,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
+    public void showLoading(boolean isShow) {
+        layoutProgress.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
 }

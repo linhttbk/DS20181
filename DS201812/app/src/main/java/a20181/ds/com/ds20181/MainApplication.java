@@ -9,6 +9,7 @@ import a20181.ds.com.ds20181.customs.BaseApplication;
 
 public class MainApplication extends BaseApplication implements AppConstant {
     private Socket mSocket;
+
     {
         try {
             mSocket = IO.socket(SOCKET_URL);

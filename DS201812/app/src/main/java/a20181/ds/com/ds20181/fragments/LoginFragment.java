@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,7 +58,8 @@ public class LoginFragment extends BaseFragment {
         String username = inputEmail.getText().toString();
         String password = inputPassword.getText().toString();
         if (validate(username, password)) {
-            if (callback != null) callback.onLoginClick(username, password);
+            Log.e( "onLoginClick: ","Passhash" + Base64.encode(password.getBytes(),Base64.NO_WRAP));
+            if (callback != null) callback.onLoginClick(username, Base64.encodeToString(password.getBytes(),Base64.NO_WRAP));
         }
 
     }
