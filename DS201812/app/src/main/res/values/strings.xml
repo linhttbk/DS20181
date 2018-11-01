@@ -15,4 +15,5 @@
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string name="last_update">last update 31/10/2018 20:51\nby nguyen van A</string>
 </resources>

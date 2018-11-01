@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import a20181.ds.com.ds20181.R;
+import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.listeners.LoginCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends BaseFragment {
     @BindView(R.id.input_email)
     EditText inputEmail;
     @BindView(R.id.input_password)
@@ -34,12 +35,15 @@ public class LoginFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.login_fragment, container, false);
+    public int getLayoutResource() {
+        return R.layout.login_fragment;
+    }
+
+    @Override
+    public void initView(View view) {
+        super.initView(view);
         ButterKnife.bind(this, view);
-        return view;
     }
 
     @OnClick(R.id.link_signup)

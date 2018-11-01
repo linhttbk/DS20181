@@ -6,11 +6,10 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
 import a20181.ds.com.ds20181.fragments.LoginFragment;
 import a20181.ds.com.ds20181.fragments.SignUpFragment;
@@ -18,14 +17,19 @@ import a20181.ds.com.ds20181.listeners.LoginCallback;
 import a20181.ds.com.ds20181.listeners.SignUpCallback;
 import a20181.ds.com.ds20181.models.BaseResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
+import a20181.ds.com.ds20181.models.TestRes;
+import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LoginActivity extends AppCompatActivity implements LoginCallback, SignUpCallback {
+import static a20181.ds.com.ds20181.AppConstant.CODE_200;
+
+public class LoginActivity extends AppCompatActivity implements LoginCallback, SignUpCallback,AppConstant {
     @BindView(R.id.layoutProgress)
     DisableTouchView layoutProgress;
 
@@ -63,36 +67,44 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
 
     @Override
     public void onLoginClick(String username, String password) {
-//        layoutProgress.setVisibility(View.VISIBLE);
-//        Call<ResponseLogin> result;
-//        if (Patterns.EMAIL_ADDRESS.matcher(username).matches()) {
-//            result = AppClient.getAPIService().loginWithEmail(username, password);
-//        } else {
-//            result = AppClient.getAPIService().loginWithUid(username, password);
-//
-//        }
-//        result.enqueue(new Callback<ResponseLogin>() {
-//            @Override
-//            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
-//                layoutProgress.setVisibility(View.GONE);
-//                try {
-//                    if (response.isSuccessful() && response.body() != null) {
-//                        ResponseLogin responses = response.body();
-//                        Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                } catch (Exception ex) {
-//                    ex.printStackTrace();
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<ResponseLogin> call, Throwable t) {
-//                layoutProgress.setVisibility(View.GONE);
-//            }
-//        });
-        startActivity(new Intent(this, MainActivity.class));
+        layoutProgress.setVisibility(View.VISIBLE);
+        AppClient.getAPIService().loginWithUid(username, password).enqueue(new Callback<ResponseLogin>() {
+            @Override
+            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
+                layoutProgress.setVisibility(View.GONE);
+                try {
+                    if (response.isSuccessful() && response.body() != null) {
+                        ResponseLogin responses = response.body();
+
+                        if (responses.getCode() == CODE_200) {
+                            User user = response.body().getUser();
+                            Headers headers = response.headers();
+                            String cookie = headers.get("set-cookie");
+                            if (user != null) {
+                                user.setCookie(cookie);
+                                app.setCurrentUser(user);
+                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            }
+                        } else {
+                            Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseLogin> call, Throwable t) {
+                t.printStackTrace();
+                layoutProgress.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     @Override

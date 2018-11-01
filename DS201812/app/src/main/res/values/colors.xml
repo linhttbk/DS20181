@@ -12,4 +12,5 @@
     <color name="color_un_focus">#FBE0E0</color>
     <color name="indeterminate_color">#a40505</color>
     <color name="transparent_color">#87000000</color>
+    <color name="divider">#a6a4a4</color>
 </resources>

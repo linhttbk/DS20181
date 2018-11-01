@@ -8,10 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import a20181.ds.com.ds20181.MainActivity;
 import a20181.ds.com.ds20181.R;
+import a20181.ds.com.ds20181.customs.BaseFragment;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class RecordFileFragment extends Fragment {
+public class RecordFileFragment extends BaseFragment {
 
     public static RecordFileFragment newInstance() {
         Bundle args = new Bundle();
@@ -20,11 +23,28 @@ public class RecordFileFragment extends Fragment {
         return fragment;
     }
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.record_file_fragment, container, false);
+    public int getLayoutResource() {
+        return R.layout.record_file_fragment;
+    }
+
+    @Override
+    public void initView(View view) {
+        super.initView(view);
         ButterKnife.bind(this, view);
-        return view;
+    }
+
+    @Override
+    public void initData() {
+        super.initData();
+
+    }
+
+    private void initFileRecord(){
+
+    }
+    @OnClick(R.id.btnAdd)
+    public void onAddClick(){
+
     }
 }

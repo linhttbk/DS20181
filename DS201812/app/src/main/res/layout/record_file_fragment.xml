@@ -1,6 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:background="@color/red" xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/padding_12dp"
+    android:paddingRight="@dimen/padding_12dp">
+
+    <TextView
+        android:id="@+id/tvHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_12dp"
+        android:paddingTop="@dimen/padding_12dp"
+        android:text="Các File đang thu âm" />
+
+    <View
+        android:id="@+id/divider_header"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvHeader"
+        android:background="@color/divider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/divider_header"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rl1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/padding_12dp"
+            android:paddingTop="@dimen/padding_12dp">
+
+            <ImageView
+                android:id="@+id/imgFile1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/database" />
+
+            <TextView
+                android:id="@+id/tvTitle1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_toRightOf="@+id/imgFile1"
+                android:text="Ai nói,thời điểm nào"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_title" />
+
+            <TextView
+                android:id="@+id/tvInfor1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle1"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_toRightOf="@+id/imgFile1"
+                android:text="@string/last_update" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/rl1"
+            android:background="@color/divider" />
+
+        <RelativeLayout
+            android:id="@+id/rl2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl1"
+            android:paddingBottom="@dimen/padding_12dp"
+            android:paddingTop="@dimen/padding_12dp">
+
+            <ImageView
+                android:id="@+id/imgFile2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/database" />
+
+            <TextView
+                android:id="@+id/tvTitle2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_toRightOf="@+id/imgFile2"
+                android:text="Nói gì,thời điểm nào?"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_title" />
+
+            <TextView
+                android:id="@+id/tvInfor2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle2"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_toRightOf="@+id/imgFile2"
+                android:text="@string/last_update" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/rl2"
+            android:background="@color/divider" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/red"
+            android:text="Thêm Lời thoại" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rlRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true">
+
+        <TextView
+            android:id="@+id/tvRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Hiện không có file ghi âm nào,Click để bắt đầu"
+            android:textSize="@dimen/text_size_title" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvRecord"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/microphone" />
+    </RelativeLayout>
 
 </RelativeLayout>

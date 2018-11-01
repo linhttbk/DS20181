@@ -2,14 +2,12 @@ package a20181.ds.com.ds20181.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import a20181.ds.com.ds20181.models.BaseResponse;
-
 public class ResponseLogin extends BaseResponse {
 
-    @SerializedName("user")
-    private UserResponseLogin user;
+    @SerializedName("data")
+    private User user;
 
-    public UserResponseLogin getUser() {
+    public User getUser() {
         return user;
     }
 }
