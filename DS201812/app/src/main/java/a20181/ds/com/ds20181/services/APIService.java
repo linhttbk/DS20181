@@ -36,5 +36,9 @@ public interface APIService {
     @Headers({"Content-Type: application/json"})
     @GET("file")
     Observable<List<FileFilm>> getAllOwnerFile(@Header("Cookie") String cookie,@Query("owner") String ownerId);
+
+    @Headers({"Content-Type: application/json"})
+    @GET("file")
+    Observable<List<FileFilm>> getAllUser(@Header("Cookie") String cookie,@Query("owner") String ownerId);
 }
 

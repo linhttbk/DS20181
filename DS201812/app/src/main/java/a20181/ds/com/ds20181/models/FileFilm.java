@@ -49,7 +49,7 @@ public class FileFilm {
     private String name;
     @SerializedName("creator")
     private String creator;
-    @SerializedName("create_at")
+    @SerializedName("createAt")
     private long createAt;
     @SerializedName("owners")
     private List<String> owners = new ArrayList<>();

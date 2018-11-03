@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rounded">
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/rlInfor"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/llButton">
+
+        <RelativeLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_12dp">
+
+            <TextView
+                android:id="@+id/titleDialog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:text="Tạo File Film"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/lbl1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/edtNameFile"
+                android:layout_alignLeft="@+id/lbl2"
+                android:layout_alignRight="@+id/lbl2"
+                android:layout_alignTop="@+id/edtNameFile"
+                android:layout_below="@+id/titleDialog"
+                android:gravity="center_vertical"
+                android:text="Tên Film:"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/edtNameFile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/titleDialog"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_toRightOf="@+id/lbl1"
+                android:backgroundTint="@color/black" />
+
+            <TextView
+                android:id="@+id/lbl2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/autoComplete"
+                android:layout_alignTop="@+id/autoComplete"
+                android:layout_below="@+id/lbl1"
+                android:gravity="center_vertical"
+                android:text="Chia sẻ với:"
+                android:textColor="@color/black" />
+
+            <AutoCompleteTextView
+                android:id="@+id/autoComplete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/edtNameFile"
+                android:layout_below="@+id/lbl1"
+                android:layout_marginTop="@dimen/radius_normal"
+                android:layout_toRightOf="@+id/lbl2"
+                android:dropDownAnchor="@+id/autoComplete"
+                android:dropDownHeight="150dp"
+                android:backgroundTint="@color/black" />
+
+            <co.lujun.androidtagview.TagContainerLayout
+                android:id="@+id/tagLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/autoComplete"
+                android:layout_marginTop="@dimen/margin_large"
+                android:padding="10dp"
+                app:container_enable_drag="false"
+                app:horizontal_interval="10dp"
+                app:tag_clickable="true"
+                app:tag_theme="pure_teal"
+                app:vertical_interval="10dp">
+
+            </co.lujun.androidtagview.TagContainerLayout>
+        </RelativeLayout>
+    </ScrollView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/llButton"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:id="@+id/llButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:weightSum="2">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:padding="@dimen/padding_12dp"
+            android:text="Đóng"
+            android:textColor="@color/bg_float_button_red" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/divider" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Xác Nhận"
+            android:textColor="@color/black" />
+    </LinearLayout>
+</RelativeLayout>

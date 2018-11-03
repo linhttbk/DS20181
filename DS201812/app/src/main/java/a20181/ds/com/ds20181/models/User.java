@@ -9,6 +9,14 @@ public class User {
     @SerializedName("name")
     private String name;
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     private String cookie;
 
     public String getUserId() {
