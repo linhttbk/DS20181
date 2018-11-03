@@ -8,6 +8,7 @@ public interface AppConstant {
     int CODE_1001 = 1001;
     int CODE_1002 = 1002;
     String PREF_USER = "login";
+    String PREF_LIST = "listUser";
     String PREF_COOKIES = "ck";
     String EMPTY = "";
     String EVENT_TEST = "test";
