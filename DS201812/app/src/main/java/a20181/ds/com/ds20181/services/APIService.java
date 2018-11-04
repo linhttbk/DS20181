@@ -5,6 +5,7 @@ import java.util.List;
 
 import a20181.ds.com.ds20181.models.BaseResponse;
 import a20181.ds.com.ds20181.models.FileFilm;
+import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.models.ResponseLogin;
 import a20181.ds.com.ds20181.models.TestRes;
 import io.reactivex.Observable;
@@ -25,10 +26,10 @@ public interface APIService {
     @FormUrlEncoded
     Call<ResponseLogin> loginWithUid(@Field("username") String username, @Field("password") String password);
 
-
     @POST("signup")
     @FormUrlEncoded
     Call<BaseResponse> signUp(@Field("username") String username, @Field("email") String email, @Field("password") String password);
+
     @Headers({"Content-Type: application/json"})
     @GET("file")
     Observable<List<FileFilm>> getAllCreatorFile(@Header("Cookie") String cookie, @Query("creator") String creatorId);
@@ -36,5 +37,11 @@ public interface APIService {
     @Headers({"Content-Type: application/json"})
     @GET("file")
     Observable<List<FileFilm>> getAllOwnerFile(@Header("Cookie") String cookie,@Query("owner") String ownerId);
+
+    @Headers({"Content-Type: application/json"})
+    @GET("record")
+    Observable<List<FileRecord>> getRecordFile(@Header("Cookie") String cookie,@Query("fileId") String fileId);
+
+
 }
 
