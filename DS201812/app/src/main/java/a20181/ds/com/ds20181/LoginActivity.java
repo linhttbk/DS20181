@@ -10,18 +10,30 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Callable;
+
 import a20181.ds.com.ds20181.customs.DisableTouchView;
 import a20181.ds.com.ds20181.fragments.LoginFragment;
 import a20181.ds.com.ds20181.fragments.SignUpFragment;
 import a20181.ds.com.ds20181.listeners.LoginCallback;
 import a20181.ds.com.ds20181.listeners.SignUpCallback;
 import a20181.ds.com.ds20181.models.BaseResponse;
+import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
 import a20181.ds.com.ds20181.models.TestRes;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,9 +41,10 @@ import retrofit2.Response;
 
 import static a20181.ds.com.ds20181.AppConstant.CODE_200;
 
-public class LoginActivity extends AppCompatActivity implements LoginCallback, SignUpCallback,AppConstant {
+public class LoginActivity extends AppCompatActivity implements LoginCallback, SignUpCallback, AppConstant {
     @BindView(R.id.layoutProgress)
     DisableTouchView layoutProgress;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,6 +62,9 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
         ft.setCustomAnimations(R.anim.right_in, R.anim.left_out, R.anim.left_in, R.anim.right_out);
         ft.replace(R.id.root, loginFragment);
         ft.commit();
+        User user = app.getCurrentUser();
+        if(user==null) return;
+
 
     }
 
@@ -68,44 +84,100 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
     @Override
     public void onLoginClick(String username, String password) {
         layoutProgress.setVisibility(View.VISIBLE);
-        AppClient.getAPIService().loginWithUid(username, password).enqueue(new Callback<ResponseLogin>() {
-            @Override
-            public void onResponse(Call<ResponseLogin> call, Response<ResponseLogin> response) {
-                layoutProgress.setVisibility(View.GONE);
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        ResponseLogin responses = response.body();
-
-                        if (responses!=null && responses.getCode() == CODE_200) {
-                            User user = response.body().getUser();
+//        AppClient.getAPIService().loginWithUid(username, password).enqueue(new Callback<ResponseLogin>() {
+//            @Override
+//            public void onResponse(Call<ResponseLogin> call, final Response<ResponseLogin> response) {
+//                layoutProgress.setVisibility(View.GONE);
+//                try {
+//                    if (response.isSuccessful() && response.body() != null) {
+//                        ResponseLogin responses = response.body();
+//
+//                        if (responses != null && responses.getCode() == CODE_200) {
+//                            User user = response.body().getUser();
+//                            Headers headers = response.headers();
+//                            String cookie = headers.get("set-cookie");
+//                            if (user != null) {
+//                                user.setCookie(cookie);
+//                                app.setCurrentUser(user);
+//                                AppClient.getAPIService().getAllUser(cookie).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                                        .subscribe(new Consumer<ListUserResponse>() {
+//                                            @Override
+//                                            public void accept(ListUserResponse listUserResponse) throws Exception {
+//                                                layoutProgress.setVisibility(View.GONE);
+//                                                Log.e( "accept: ",listUserResponse.getData().size() +"" );
+//                                            }
+//                                        }, new Consumer<Throwable>() {
+//                                            @Override
+//                                            public void accept(Throwable throwable) throws Exception {
+//                                                Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+//                                            }
+//                                        });
+//                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                            }
+//                        } else {
+//                            Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//
+//                    } else {
+//                        Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                } catch (Exception ex) {
+//                    ex.printStackTrace();
+//
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<ResponseLogin> call, Throwable t) {
+//                t.printStackTrace();
+//                layoutProgress.setVisibility(View.GONE);
+//                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//            }
+//        });
+        Disposable disposable = AppClient.getAPIService().login(username, password)
+                .flatMap(new Function<Response, ObservableSource<?>>() {
+                    @Override
+                    public ObservableSource<?> apply(Response response) throws Exception {
+                        if (response != null && response.isSuccessful()) {
+                            ResponseLogin responseLogin = (ResponseLogin) response.body();
+                            User user = responseLogin.getUser();
                             Headers headers = response.headers();
                             String cookie = headers.get("set-cookie");
                             if (user != null) {
                                 user.setCookie(cookie);
                                 app.setCurrentUser(user);
-                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                Log.e("apply: ", "Login success");
+                                return AppClient.getAPIService().getAllUser(cookie);
                             }
                         } else {
-                            Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                         }
-
-                    }else {
-                        Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                        return null;
                     }
 
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Object>() {
 
-                }
-            }
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        layoutProgress.setVisibility(View.GONE);
+                        Log.e("accept: ", o.toString());
+                        if (o != null && o instanceof ListUserResponse) {
+                            List<User> users = ((ListUserResponse) o).getData();
+                            app.setListUser(users);
+                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                        }
 
-            @Override
-            public void onFailure(Call<ResponseLogin> call, Throwable t) {
-                t.printStackTrace();
-                layoutProgress.setVisibility(View.GONE);
-                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        layoutProgress.setVisibility(View.GONE);
+                        Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+        compositeDisposable.add(disposable);
+
 
     }
 
@@ -135,4 +207,10 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
         });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (compositeDisposable != null)
+            compositeDisposable.dispose();
+    }
 }

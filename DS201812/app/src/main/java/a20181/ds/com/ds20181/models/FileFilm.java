@@ -49,10 +49,10 @@ public class FileFilm {
     private String name;
     @SerializedName("creator")
     private String creator;
-    @SerializedName("create_at")
+    @SerializedName("createAt")
     private long createAt;
     @SerializedName("owners")
-    private List<String> owners = new ArrayList<>();
+    private String owners;
 
     public boolean isHeader() {
         return isHeader;
@@ -65,5 +65,9 @@ public class FileFilm {
     public boolean isCreator(String userId) {
         if (StringUtils.isEmpty(userId)) return false;
         return userId.equals(creator);
+    }
+
+    public void setOwners(String owners) {
+        this.owners = owners;
     }
 }

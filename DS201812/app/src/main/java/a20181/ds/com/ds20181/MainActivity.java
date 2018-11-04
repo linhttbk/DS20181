@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
 import a20181.ds.com.ds20181.fragments.RecordContentFragment;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
@@ -117,5 +118,11 @@ public class MainActivity extends AppCompatActivity
 
     public void showLoading(boolean isShow) {
         layoutProgress.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    public void switchFragment(BaseFragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment, fragment.getClass().getSimpleName());
+        transaction.commit();
     }
 }
