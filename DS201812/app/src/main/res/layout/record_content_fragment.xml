@@ -8,11 +8,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:padding="8dp"
-        android:id="@+id/rcv_posts"
+        android:id="@+id/rcv_content_recorded"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
     </android.support.v7.widget.RecyclerView>
-    
+
 
 </RelativeLayout>

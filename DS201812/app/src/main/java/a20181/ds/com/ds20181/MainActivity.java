@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
+import a20181.ds.com.ds20181.fragments.RecordContentFragment;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, RecordFileFragment.newInstance());
         ft.commit();
+//        showContentRecord();
     }
 
     @Override
@@ -59,6 +61,12 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void showContentRecord(){
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.container, RecordContentFragment.newInstance())
+                .commit();
     }
 
     @Override

@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
 
 public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
 
-    protected RecordAdapter(@NonNull Context context, ItemClickListener itemClickListener) {
+    public RecordAdapter(@NonNull Context context, ItemClickListener itemClickListener) {
         super(context, itemClickListener);
     }
 
