@@ -1,16 +1,21 @@
 package a20181.ds.com.ds20181.services;
 
 
+import com.google.gson.JsonObject;
+
 import java.util.List;
 
 import a20181.ds.com.ds20181.models.BaseResponse;
+import a20181.ds.com.ds20181.models.BodyFile;
 import a20181.ds.com.ds20181.models.FileFilm;
+import a20181.ds.com.ds20181.models.FileResponse;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
 import a20181.ds.com.ds20181.models.TestRes;
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -47,5 +52,18 @@ public interface APIService {
     @Headers({"Content-Type: application/json"})
     @GET("get_all_user")
     Observable<ListUserResponse> getAllUser(@Header("Cookie") String cookie);
+
+
+    @Headers({"Content-Type: application/json"})
+    @POST("file")
+    @FormUrlEncoded
+    Observable<FileResponse> createFile(@Header("Cookie") String cookie, @Field("name") String fileName, @Field("createAt") long createAt, @Field("owners[]") List<String> owner);
+    @Headers({"Content-Type: application/json"})
+    @POST("file")
+    Observable<FileFilm> createFile(@Header("Cookie") String cookie, @Body JsonObject file);
+
+
+
+
 }
 

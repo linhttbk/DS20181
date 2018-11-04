@@ -25,7 +25,7 @@ public class UserShareAdapter extends ArrayAdapter<User> {
 
     public UserShareAdapter(@NonNull Context context, int resource, @NonNull List<User> objects) {
         super(context, resource, objects);
-        mItems = new ArrayList<>(objects);
+        mItems = objects;
         clones = new ArrayList<>(objects);
     }
 
@@ -43,7 +43,7 @@ public class UserShareAdapter extends ArrayAdapter<User> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Log.e("getView: ", "Hello");
+        Log.e("getView: ", "Hello" + position + " " + mItems.size());
         View row = convertView;
         ViewHolder holder = null;
         if (row == null) {
@@ -77,7 +77,7 @@ public class UserShareAdapter extends ArrayAdapter<User> {
                 if (charSequence != null) {
                     if (clones != null && !clones.isEmpty()) {
                         for (User user : clones) {
-                            if (user.getName().toLowerCase().startsWith(charSequence.toString().toLowerCase())) {
+                            if (user.getName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
                                 suggestions.add(user);
                             }
                         }
@@ -98,8 +98,6 @@ public class UserShareAdapter extends ArrayAdapter<User> {
                             mItems.add((User) object);
                         }
                     }
-                    clones.clear();
-                    clones.addAll(mItems);
                     notifyDataSetChanged();
                 } else if (charSequence == null) {
                     // no filter, add entire original list back in
@@ -109,4 +107,5 @@ public class UserShareAdapter extends ArrayAdapter<User> {
             }
         };
     }
+
 }
