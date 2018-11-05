@@ -152,6 +152,7 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
             Toast.makeText(getContext(), "Bạn chưa nhập tên File", Toast.LENGTH_SHORT).show();
             return;
         }
+        ((MainActivity) getActivity()).showLoading(true);
         List<String> shares = new ArrayList<>();
         if (!ListUtil.isEmpty(shareList)) {
             for (User user : shareList) {
@@ -162,7 +163,7 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
         film.setName(nameFile);
         film.setCreateAt(System.currentTimeMillis());
         film.setOwners(shares);
-        JsonObject file = generateRegistrationRequest(nameFile,System.currentTimeMillis(),shares);
+        JsonObject file = generateRegistrationRequest(nameFile, System.currentTimeMillis(), shares);
         Disposable disposable = AppClient.getAPIService().createFile(app.getCookie(), file)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -170,11 +171,19 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
                     @Override
                     public void accept(FileFilm fileFilm) throws Exception {
                         Log.e("accept: ", fileFilm.getId());
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).showLoading(false);
+                            ((MainActivity) getActivity()).switchFragment(RecordStreamFragment.newInstance(fileFilm.getId()));
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).showLoading(false);
+                        }
                         Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+
                     }
                 });
         compositeDisposable.add(disposable);

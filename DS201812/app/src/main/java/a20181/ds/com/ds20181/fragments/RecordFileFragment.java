@@ -150,7 +150,10 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
 
     @Override
     public void onItemClick(View view, int position) {
-
+        FileFilm film = adapter.getItem(position);
+        if(film==null || film.isHeader()) return;
+        String id = film.getId();
+        ((MainActivity)getActivity()).showContentRecord(id);
     }
 
     @Override

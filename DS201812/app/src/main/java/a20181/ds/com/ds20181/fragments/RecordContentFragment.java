@@ -28,6 +28,7 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
+import static a20181.ds.com.ds20181.AppConstant.EMPTY;
 import static a20181.ds.com.ds20181.AppConstant.app;
 
 public class RecordContentFragment extends BaseFragment implements RecordAdapter.ItemClickListener {
@@ -38,15 +39,17 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     private RecordAdapter recordAdapter;
 
     private List<FileRecord> fileRecords;
+    private String id = EMPTY;
 
     @Override
     public int getLayoutResource() {
         return R.layout.record_content_fragment;
     }
 
-    public static RecordContentFragment newInstance() {
+    public static RecordContentFragment newInstance(String id) {
         Bundle args = new Bundle();
         RecordContentFragment fragment = new RecordContentFragment();
+        fragment.id = id;
         fragment.setArguments(args);
         return fragment;
     }
@@ -66,7 +69,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     @Override
     public void initData() {
         super.initData();
-        initFileRecord() ;
+        initFileRecord();
 
     }
 
@@ -74,11 +77,11 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         fileRecords = new ArrayList<>();
 
         User user = app.getCurrentUser();
-        if (user == null){
+        if (user == null) {
             return;
         }
-        Log.e("initFileRecord: ", user.getUserId() +" xx " +app.getCurrentUser().getCookie());
-        Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), "5bd9aed5e0ebc03b98a458da");
+        Log.e("initFileRecord: ", user.getUserId() + " xx " + app.getCurrentUser().getCookie());
+        Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), id);
 
         request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
                 subscribe(new Consumer<Object>() {

@@ -8,12 +8,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
-
 
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
@@ -21,8 +18,6 @@ import a20181.ds.com.ds20181.fragments.RecordContentFragment;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AppConstant {
@@ -53,6 +48,7 @@ public class MainActivity extends AppCompatActivity
 //        showContentRecord();
     }
 
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -63,9 +59,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showContentRecord(){
+    public void showContentRecord(String id){
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, RecordContentFragment.newInstance())
+                .replace(R.id.container, RecordContentFragment.newInstance(id))
                 .commit();
     }
 
@@ -124,5 +120,12 @@ public class MainActivity extends AppCompatActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.container, fragment, fragment.getClass().getSimpleName());
         transaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        bus.unregister(this);
+        super.onDestroy();
+
     }
 }
