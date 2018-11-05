@@ -58,9 +58,12 @@ public class AppState implements AppConstant {
         if (dataList.equals(EMPTY)) return null;
         List<User> results = new Gson().fromJson(dataList, new TypeToken<List<User>>() {
         }.getType());
-        if (results != null) {
-            User user = getCurrentUser();
-            if (results.contains(user)) results.remove(user);
+        for(int i = 0 ; i < results.size() ; i++){
+            User user = results.get(i);
+            if(getCurrentUser()==null) break;
+            if(getCurrentUser().getUserId().equals(user.getUserId())){
+                results.remove(user);
+            }
         }
         return results;
     }

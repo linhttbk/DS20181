@@ -71,9 +71,9 @@
                 android:layout_below="@+id/lbl1"
                 android:layout_marginTop="@dimen/radius_normal"
                 android:layout_toRightOf="@+id/lbl2"
+                android:backgroundTint="@color/black"
                 android:dropDownAnchor="@+id/autoComplete"
-                android:dropDownHeight="150dp"
-                android:backgroundTint="@color/black" />
+                android:dropDownHeight="150dp" />
 
             <co.lujun.androidtagview.TagContainerLayout
                 android:id="@+id/tagLayout"
@@ -130,4 +130,14 @@
             android:text="Xác Nhận"
             android:textColor="@color/black" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnDone"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:background="@color/bg_button_red"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="Done" />
 </RelativeLayout>

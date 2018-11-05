@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public enum AppAction {
 
     ADD_RECORD("add_record"),
-    CANCEL_CREATE_PROFILE("cancel_create_profile");
+    FINISH_RECORD("finish_record");
 
     public String value;
 

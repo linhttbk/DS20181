@@ -17,14 +17,14 @@
             android:textSize="16sp"
             android:text="BoneFlat"
             android:textColor="@color/black"
-            android:id="@+id/tv_recorder_name"
+            android:id="@+id/tvName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
 
         <TextView
             android:text="10:06:35"
-            android:id="@+id/tv_recorder_time"
+            android:id="@+id/tvTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"/>
@@ -32,10 +32,14 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tv_record_content"
+        android:id="@+id/tvContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:text="text record here"/>
-
+<View
+    android:layout_marginTop="@dimen/margin_small"
+    android:background="@color/divider"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"/>
 </LinearLayout>

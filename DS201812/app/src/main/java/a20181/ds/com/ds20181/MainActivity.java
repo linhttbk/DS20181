@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, RecordFileFragment.newInstance());
+        ft.addToBackStack(System.currentTimeMillis() + "");
         ft.commit();
 //        showContentRecord();
     }
@@ -59,10 +60,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showContentRecord(String id){
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.container, RecordContentFragment.newInstance(id))
-                .commit();
+    public void showContentRecord(String id) {
+        switchFragment(RecordContentFragment.newInstance(id));
     }
 
     @Override
@@ -118,7 +117,8 @@ public class MainActivity extends AppCompatActivity
 
     public void switchFragment(BaseFragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.container, fragment, fragment.getClass().getSimpleName());
+        transaction.replace(R.id.container, fragment);
+        transaction.addToBackStack(System.currentTimeMillis() + "");
         transaction.commit();
     }
 
@@ -128,4 +128,5 @@ public class MainActivity extends AppCompatActivity
         super.onDestroy();
 
     }
+
 }

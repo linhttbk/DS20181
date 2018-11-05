@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.models.FileRecord;
+import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,7 +30,7 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         FileRecord fileRecord = mDataList.get(position);
         ((ViewHolder)holder).tvRecorderName.setText(fileRecord.getUserId());
-        ((ViewHolder)holder).tvRecordTime.setText(fileRecord.getTime());
+        ((ViewHolder)holder).tvRecordTime.setText(StringUtils.timeConversion(fileRecord.getTime()));
         ((ViewHolder)holder).tvRecordContent.setText(fileRecord.getContent());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,14 +41,11 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-
-        @BindView(R.id.tv_recorder_name)
+        @BindView(R.id.tvName)
          TextView tvRecorderName;
-
-        @BindView(R.id.tv_recorder_time)
-         TextView tvRecordTime;
-
-        @BindView(R.id.tv_record_content)
+        @BindView(R.id.tvTime)
+        TextView tvRecordTime;
+        @BindView(R.id.tvContent)
          TextView tvRecordContent;
 
         public ViewHolder(View itemView) {

@@ -38,7 +38,7 @@ public class FileFilmAdapter extends BaseRecyclerViewAdapter<FileFilm> {
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         FileFilm film = mDataList.get(position);
         if (holder instanceof HeaderHolder) {
             ((HeaderHolder) holder).tvHeader.setText(film.getName());
@@ -47,6 +47,12 @@ public class FileFilmAdapter extends BaseRecyclerViewAdapter<FileFilm> {
             String createAt = StringUtils.formatLongToDate(film.getCreateAt());
             ((ViewHolder) holder).tvDate.setText(StringUtils.isEmpty(createAt) ? AppConstant.EMPTY : createAt);
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mItemClickListener.onItemClick(holder.itemView, position);
+            }
+        });
     }
 
     @Override

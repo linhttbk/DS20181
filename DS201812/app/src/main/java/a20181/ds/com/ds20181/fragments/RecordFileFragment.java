@@ -1,12 +1,14 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,6 +30,7 @@ import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.adapters.BaseRecyclerViewAdapter;
 import a20181.ds.com.ds20181.adapters.FileFilmAdapter;
 import a20181.ds.com.ds20181.customs.BaseFragment;
+import a20181.ds.com.ds20181.customs.InputFilterMinMax;
 import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
@@ -155,6 +159,8 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
         String id = film.getId();
         ((MainActivity)getActivity()).showContentRecord(id);
     }
+
+
 
     @Override
     public void onDestroy() {

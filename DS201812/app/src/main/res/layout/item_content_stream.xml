@@ -21,7 +21,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/tvTime"
+        android:layout_below="@+id/tvContent"
         android:layout_marginTop="@dimen/margin_small"
         android:background="@color/divider" />
 </RelativeLayout>

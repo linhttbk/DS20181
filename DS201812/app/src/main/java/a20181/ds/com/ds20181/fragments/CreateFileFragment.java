@@ -1,18 +1,18 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,14 +20,14 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import a20181.ds.com.ds20181.AppAction;
 import a20181.ds.com.ds20181.AppConstant;
 import a20181.ds.com.ds20181.MainActivity;
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.adapters.UserShareAdapter;
 import a20181.ds.com.ds20181.customs.BaseFragment;
-import a20181.ds.com.ds20181.models.BodyFile;
 import a20181.ds.com.ds20181.models.FileFilm;
-import a20181.ds.com.ds20181.models.FileResponse;
+import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
@@ -54,6 +54,8 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
     UserShareAdapter adapter;
     private List<User> shareList;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
+    @BindView(R.id.btnDone)
+    Button btn_done;
 
     public static CreateFileFragment newInstance() {
         Bundle args = new Bundle();
@@ -96,8 +98,9 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
                         public void accept(ListUserResponse listUserResponse) throws Exception {
                             ((MainActivity) getActivity()).showLoading(false);
                             List<User> users = listUserResponse.getData();
-                            adapter.replace(users);
+
                             app.setListUser(users);
+                            adapter.replace(app.getListUser());
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -142,6 +145,7 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
 
     }
 
+
     @OnClick(R.id.btnAddFile)
     public void addFile() {
         User currentUser = app.getCurrentUser();
@@ -158,13 +162,14 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
             for (User user : shareList) {
                 if (!shares.contains(user.getUserId())) shares.add(user.getUserId());
             }
+
+
         }
-        BodyFile film = new BodyFile();
-        film.setName(nameFile);
-        film.setCreateAt(System.currentTimeMillis());
-        film.setOwners(shares);
-        JsonObject file = generateRegistrationRequest(nameFile, System.currentTimeMillis(), shares);
-        Disposable disposable = AppClient.getAPIService().createFile(app.getCookie(), file)
+        BodyFilePost fileResponse = new BodyFilePost();
+        fileResponse.setName(nameFile);
+        fileResponse.setCreatAt(System.currentTimeMillis());
+        fileResponse.setOwners(shares);
+        Disposable disposable = AppClient.getAPIService().createFile(app.getCookie(), fileResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<FileFilm>() {
@@ -189,26 +194,39 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
         compositeDisposable.add(disposable);
     }
 
-    private static JsonObject generateRegistrationRequest(String nameFile, long creatAt, List<String> shares) {
-        try {
-            JSONObject subJsonObject = new JSONObject();
-            subJsonObject.put("name", nameFile);
-            subJsonObject.put("creatAt", creatAt);
-            JsonArray array = new JsonArray();
-            for (String id : shares) {
-                array.add(id);
-            }
-
-            subJsonObject.put("owners", array);
-            JsonParser jsonParser = new JsonParser();
-            JsonObject gsonObject = (JsonObject) jsonParser.parse(subJsonObject.toString());
-            return gsonObject;
-        } catch (JSONException e) {
-            e.printStackTrace();
+    //    private static JsonObject generateRegistrationRequest(String nameFile, long creatAt, List<String> shares) {
+//        try {
+//            JSONObject subJsonObject = new JSONObject();
+//            subJsonObject.put("name", nameFile);
+//            subJsonObject.put("creatAt", creatAt);
+//            JsonArray array = new JsonArray();
+//            for (String id : shares) {
+//                array.add(id);
+//            }
+//            subJsonObject.put("owners", array);
+//            JsonParser jsonParser = new JsonParser();
+//            JsonObject gsonObject = (JsonObject) jsonParser.parse(subJsonObject.toString());
+//            return gsonObject;
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return null;
+//    }
+    @Subscribe
+    public void onAppAction(AppAction action) {
+        if (action == AppAction.FINISH_RECORD) {
+            btn_done.setVisibility(View.VISIBLE);
         }
-        return null;
     }
 
+    @OnClick(R.id.btnDone)
+    public void onClickDone() {
+        getActivity().onBackPressed();
+    }
+    @OnClick(R.id.btn_cancel)
+    public void onCancelClick(){
+        getActivity().onBackPressed();
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

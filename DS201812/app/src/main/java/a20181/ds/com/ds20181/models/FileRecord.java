@@ -9,7 +9,7 @@ public class FileRecord {
     private String userId;
     @SerializedName("content")
     private String content;
-    @SerializedName("titme")
+    @SerializedName("time")
     private int time;
 
     public String getId() {

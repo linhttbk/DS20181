@@ -2,7 +2,6 @@ package a20181.ds.com.ds20181.models;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import a20181.ds.com.ds20181.utils.StringUtils;
@@ -49,10 +48,10 @@ public class FileFilm {
     private String name;
     @SerializedName("creator")
     private String creator;
-    @SerializedName("createAt")
+    @SerializedName("creatAt")
     private long createAt;
     @SerializedName("owners")
-    private String owners;
+    private List<String> owners;
 
     public boolean isHeader() {
         return isHeader;
@@ -67,7 +66,7 @@ public class FileFilm {
         return userId.equals(creator);
     }
 
-    public void setOwners(String owners) {
+    public void setOwners(List<String> owners) {
         this.owners = owners;
     }
 }

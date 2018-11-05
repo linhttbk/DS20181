@@ -10,9 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
 
 import a20181.ds.com.ds20181.customs.DisableTouchView;
 import a20181.ds.com.ds20181.fragments.LoginFragment;
@@ -22,7 +20,6 @@ import a20181.ds.com.ds20181.listeners.SignUpCallback;
 import a20181.ds.com.ds20181.models.BaseResponse;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
-import a20181.ds.com.ds20181.models.TestRes;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
 import butterknife.BindView;
@@ -38,8 +35,6 @@ import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
-import static a20181.ds.com.ds20181.AppConstant.CODE_200;
 
 public class LoginActivity extends AppCompatActivity implements LoginCallback, SignUpCallback, AppConstant {
     @BindView(R.id.layoutProgress)
@@ -173,7 +168,6 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         layoutProgress.setVisibility(View.GONE);
-                        Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
         compositeDisposable.add(disposable);

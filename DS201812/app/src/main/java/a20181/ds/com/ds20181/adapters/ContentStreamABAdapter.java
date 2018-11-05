@@ -29,9 +29,9 @@ public class ContentStreamABAdapter extends BaseRecyclerViewAdapter<FileRecord> 
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof ContentStreamBCAdapter.ViewHolder) {
-            ((ContentStreamBCAdapter.ViewHolder) holder).tvTime.setText(StringUtils.timeConversion(getItem(position).getTime()));
-            ((ContentStreamBCAdapter.ViewHolder) holder).tvContent.setText(getItem(position).getUserId());
+        if (holder instanceof ViewHolder) {
+            ((ViewHolder) holder).tvTime.setText(StringUtils.timeConversion(getItem(position).getTime()));
+            ((ViewHolder) holder).tvContent.setText(getItem(position).getUserId());
         }
     }
 

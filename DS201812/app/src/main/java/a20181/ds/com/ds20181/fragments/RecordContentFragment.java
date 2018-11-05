@@ -24,6 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -37,8 +39,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     RecyclerView rcvContent;
 
     private RecordAdapter recordAdapter;
-
-    private List<FileRecord> fileRecords;
+    CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String id = EMPTY;
 
     @Override
@@ -73,17 +74,18 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
 
     }
 
+
     private void initFileRecord() {
-        fileRecords = new ArrayList<>();
 
         User user = app.getCurrentUser();
         if (user == null) {
             return;
         }
+        ((MainActivity) getActivity()).showLoading(true);
         Log.e("initFileRecord: ", user.getUserId() + " xx " + app.getCurrentUser().getCookie());
         Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), id);
 
-        request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
+        Disposable disposable = request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
                 subscribe(new Consumer<Object>() {
 
                     @Override
@@ -91,7 +93,6 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                         if (getActivity() != null)
                             ((MainActivity) getActivity()).showLoading(false);
                         List<FileRecord> result = (ArrayList) o;
-                        Log.d("data size", "accept: " + result.size());
                         recordAdapter.set(result);
                     }
                 }, new Consumer<Throwable>() {
@@ -104,10 +105,19 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                         }
                     }
                 });
+        compositeDisposable.add(disposable);
     }
 
     @Override
     public void onItemClick(View view, int position) {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (compositeDisposable != null) {
+            compositeDisposable.dispose();
+        }
     }
 }

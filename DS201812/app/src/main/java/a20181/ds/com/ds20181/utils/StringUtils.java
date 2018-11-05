@@ -27,7 +27,9 @@ public class StringUtils {
         StringBuilder builder = new StringBuilder();
         return hours + ":" + minutes + ":" + seconds;
     }
-
+    public static int convertTime(int hour,int min, int sec){
+        return hour*3600+ min*60+sec;
+    }
     public static String formatLongToDate(long time) {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return format.format(new Date(time));
