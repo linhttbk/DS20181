@@ -3,10 +3,12 @@ package a20181.ds.com.ds20181.models;
 import com.google.gson.annotations.SerializedName;
 
 public class FileRecord {
-    @SerializedName("fileId")
+    @SerializedName("_id")
     private String id;
+    @SerializedName("fileId")
+    private String fileId;
     @SerializedName("speaker")
-    private String userId;
+    private String speaker;
     @SerializedName("content")
     private String content;
     @SerializedName("time")
@@ -20,12 +22,12 @@ public class FileRecord {
         this.id = id;
     }
 
-    public String getUserId() {
-        return userId;
+    public String getSpeaker() {
+        return speaker;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setSpeaker(String speaker) {
+        this.speaker = speaker;
     }
 
     public String getContent() {
@@ -42,5 +44,9 @@ public class FileRecord {
 
     public void setTime(int time) {
         this.time = time;
+    }
+
+    public String getFileId() {
+        return fileId;
     }
 }

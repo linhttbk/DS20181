@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:background="@drawable/bg_edt_rounded"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="@dimen/margin_normal"
+        android:text="Cập nhật Record"
+        android:textColor="@color/black"
+        android:textSize="@dimen/text_size_title" />
+
+    <View
+        android:id="@+id/divider_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/tvTitle"
+        android:background="@color/blue" />
+
+    <TextView
+        android:id="@+id/lblName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edtName"
+        android:layout_alignLeft="@id/lblTime"
+        android:layout_alignRight="@+id/lblTime"
+        android:layout_alignTop="@+id/edtName"
+        android:layout_below="@+id/divider_view"
+        android:gravity="center"
+        android:text="Người nói:" />
+
+    <EditText
+        android:textCursorDrawable="@null"
+        android:textColor="@color/black"
+        android:id="@+id/edtName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/divider_view"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_toRightOf="@+id/lblName"
+        android:background="@drawable/bg_edt_rounded"
+        android:padding="@dimen/padding_4dp" />
+
+    <TextView
+        android:id="@+id/lblContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/edtContent"
+        android:layout_alignLeft="@id/lblTime"
+        android:layout_alignRight="@+id/lblTime"
+        android:layout_alignTop="@+id/edtContent"
+        android:layout_below="@+id/lblName"
+        android:gravity="center"
+        android:text="Nội dung:" />
+
+    <EditText
+        android:textCursorDrawable="@null"
+        android:textColor="@color/black"
+        android:id="@+id/edtContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblName"
+        android:layout_marginRight="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:layout_toRightOf="@+id/lblName"
+        android:background="@drawable/bg_edt_rounded"
+        android:padding="@dimen/padding_4dp" />
+
+    <TextView
+        android:id="@+id/lblTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edtContent"
+        android:layout_marginLeft="@dimen/margin_normal"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:paddingRight="@dimen/padding_4dp"
+        android:text="Thời điểm:" />
+
+    <RelativeLayout
+        android:gravity="center"
+        android:layout_below="@+id/lblTime"
+        android:id="@+id/rl1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtHour"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/edtHour"
+            android:text="giờ:" />
+
+        <EditText
+            android:gravity="center"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:maxLength="2"
+            android:inputType="number"
+            android:id="@+id/edtHour"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/lblMinutes"
+            android:background="@drawable/bg_edt_rounded" />
+
+        <TextView
+            android:id="@+id/lblMinutes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtHour"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_toLeftOf="@+id/edtMinutes"
+            android:text="phút:" />
+
+        <EditText
+            android:gravity="center"
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:maxLength="2"
+            android:inputType="number"
+            android:id="@+id/edtMinutes"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:background="@drawable/bg_edt_rounded" />
+
+        <TextView
+            android:id="@+id/lblSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/edtHour"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_toRightOf="@+id/edtMinutes"
+            android:text="giây:" />
+
+        <EditText
+            android:textCursorDrawable="@null"
+            android:textColor="@color/black"
+            android:maxLength="2"
+            android:inputType="number"
+            android:gravity="center"
+            android:id="@+id/edtSecond"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginTop="@dimen/margin_normal"
+            android:layout_toRightOf="@+id/lblSecond"
+            android:background="@drawable/bg_edt_rounded" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/rl1"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/rl1"
+        android:layout_marginTop="@dimen/margin_small"
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btn_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="Hủy" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/divider" />
+
+        <Button
+            android:id="@+id/btn_update"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:text="Cập nhật"
+            android:textColor="@color/blue" />
+    </LinearLayout>
+</RelativeLayout>

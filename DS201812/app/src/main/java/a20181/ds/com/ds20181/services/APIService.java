@@ -11,10 +11,12 @@ import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
+import a20181.ds.com.ds20181.models.UpdateRecordBody;
 import io.reactivex.Observable;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -70,6 +72,19 @@ public interface APIService {
     @Headers({"Content-Type: application/json"})
     @POST("record/{fileID}")
     Observable<FileRecord> addRecord(@Header("Cookie") String cookie, @Path("fileID") String fileId, @Body CreateRecordBody recordBody);
+
+    @Headers({"Content-Type: application/json"})
+    @PUT("record/{id}")
+    Observable<FileRecord> updateRecord(@Header("Cookie") String cookie, @Path("id") String recordId, @Body UpdateRecordBody recordBody);
+
+    @Headers({"Content-Type: application/json"})
+    @DELETE("file/{id}")
+    Observable<BaseResponse> deleteFile(@Header("Cookie") String cookie, @Path("id") String idFile);
+
+    @Headers({"Content-Type: application/json"})
+    @DELETE("record/{id}")
+    Observable<BaseResponse> deleteRecord(@Header("Cookie") String cookie, @Path("id") String idRecord);
+
 
 }
 

@@ -3,10 +3,12 @@ package a20181.ds.com.ds20181;
 import com.squareup.otto.Bus;
 
 import a20181.ds.com.ds20181.customs.GlobalBus;
+import io.socket.client.Socket;
 
 public interface AppConstant {
     boolean DEBUG = true;
     String SOCKET_URL = "http://192.168.0.107:1232";
+
     AppState app = AppState.getInstance();
     Bus bus = GlobalBus.getBus();
     int CODE_200 = 200;
@@ -18,4 +20,7 @@ public interface AppConstant {
     String EMPTY = "";
     String EVENT_TEST = "test";
     String EVENT_ADD = "add";
+
+      String POPUP_CONSTANT = "mPopup";
+      String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
 }

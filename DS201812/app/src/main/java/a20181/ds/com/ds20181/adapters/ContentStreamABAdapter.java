@@ -31,7 +31,7 @@ public class ContentStreamABAdapter extends BaseRecyclerViewAdapter<FileRecord> 
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
             ((ViewHolder) holder).tvTime.setText(StringUtils.timeConversion(getItem(position).getTime()));
-            ((ViewHolder) holder).tvContent.setText(getItem(position).getUserId());
+            ((ViewHolder) holder).tvContent.setText(getItem(position).getSpeaker());
         }
     }
 

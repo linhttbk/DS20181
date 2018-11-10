@@ -39,6 +39,11 @@ public abstract class BaseRecyclerViewAdapter<T>
         mDataList.addAll(clone);
         notifyDataSetChanged();
     }
+    public void update(int position,T t){
+        if(position< 0 || mDataList==null||position >= mDataList.size() || t ==null ) return;
+        mDataList.set(position,t);
+        notifyItemChanged(position);
+    }
 
     public void clear() {
         mDataList.clear();

@@ -1,26 +1,17 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,26 +21,19 @@ import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.adapters.BaseRecyclerViewAdapter;
 import a20181.ds.com.ds20181.adapters.FileFilmAdapter;
 import a20181.ds.com.ds20181.customs.BaseFragment;
-import a20181.ds.com.ds20181.customs.InputFilterMinMax;
 import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
-import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import co.lujun.androidtagview.TagContainerLayout;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class RecordFileFragment extends BaseFragment implements BaseRecyclerViewAdapter.ItemClickListener, AppConstant {
     @BindView(R.id.rcvList)
@@ -154,12 +138,49 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
 
     @Override
     public void onItemClick(View view, int position) {
-        FileFilm film = adapter.getItem(position);
-        if(film==null || film.isHeader()) return;
-        String id = film.getId();
-        ((MainActivity)getActivity()).showContentRecord(id);
-    }
+        switch (view.getId()) {
+            case R.id.root:
+                FileFilm film = adapter.getItem(position);
+                if (film == null || film.isHeader()) return;
+                String id = film.getId();
+                ((MainActivity) getActivity()).showContentRecord(id);
+                break;
+            case R.id.imgMore:
+                final PopupMenu popup = new PopupMenu(getContext(), view);
+                popup.getMenuInflater().inflate(R.menu.dialog_menu, popup.getMenu());
+                //Show icon for menu
+                try {
+                    Field[] fields = popup.getClass().getDeclaredFields();
+                    for (Field field : fields) {
+                        if (field.getName().equals(POPUP_CONSTANT)) {
+                            field.setAccessible(true);
+                            Object menuPopupHelper = field.get(popup);
+                            Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                            Method setForceIcons = classPopupHelper.getMethod(POPUP_FORCE_SHOW_ICON, boolean.class);
+                            setForceIcons.invoke(menuPopupHelper, true);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                popup.show();
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem menuItem) {
+                        switch (menuItem.getItemId()) {
+                            case R.id.share_file:
+                                popup.dismiss();
+                                break;
+                        }
+                        return false;
+                    }
+                });
 
+                break;
+        }
+
+    }
 
 
     @Override

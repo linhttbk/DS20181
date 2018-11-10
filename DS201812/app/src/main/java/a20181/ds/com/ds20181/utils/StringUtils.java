@@ -19,6 +19,22 @@ public class StringUtils {
         return !m.find();
     }
 
+    public static String getHourFromTime(int totalSeconds) {
+        return String.valueOf(totalSeconds / (MINUTES_IN_AN_HOUR * SECONDS_IN_A_MINUTE));
+
+    }
+
+    public static String getMinuteFromTime(int totalSeconds) {
+        return String.valueOf((totalSeconds / SECONDS_IN_A_MINUTE) % MINUTES_IN_AN_HOUR);
+
+    }
+
+    public static String getSecondFromTime(int totalSeconds) {
+        return String.valueOf(totalSeconds % SECONDS_IN_A_MINUTE);
+
+    }
+
+
     public static String timeConversion(int totalSeconds) {
         int seconds = totalSeconds % SECONDS_IN_A_MINUTE;
         int totalMinutes = totalSeconds / SECONDS_IN_A_MINUTE;
@@ -27,9 +43,11 @@ public class StringUtils {
         StringBuilder builder = new StringBuilder();
         return hours + ":" + minutes + ":" + seconds;
     }
-    public static int convertTime(int hour,int min, int sec){
-        return hour*3600+ min*60+sec;
+
+    public static int convertTime(int hour, int min, int sec) {
+        return hour * 3600 + min * 60 + sec;
     }
+
     public static String formatLongToDate(long time) {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return format.format(new Date(time));

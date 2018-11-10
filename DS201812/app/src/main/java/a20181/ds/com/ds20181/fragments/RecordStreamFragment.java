@@ -20,7 +20,6 @@ import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.InputFilterMinMax;
 import a20181.ds.com.ds20181.models.CreateRecordBody;
-import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.services.AppClient;
 import a20181.ds.com.ds20181.utils.StringUtils;
@@ -78,7 +77,6 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainActivity) getActivity()).showLoading(true);
                 //  dialog.dismiss();
                 if (app.getCurrentUser() == null) return;
                 else {
@@ -89,20 +87,20 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
                     String secString = edtSecond.getText().toString().trim();
 
                     if (StringUtils.isEmpty(name) || StringUtils.isEmpty(content) || StringUtils.isEmpty(hourString) || StringUtils.isEmpty(minString) || StringUtils.isEmpty(secString)) {
-                        Toast.makeText(getContext(), "Bạn cần điền đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), getString(R.string.msg_fill_infor), Toast.LENGTH_SHORT).show();
 
                     } else {
                         int hour = Integer.parseInt(hourString);
                         int min = Integer.parseInt(minString);
                         int sec = Integer.parseInt(secString);
                         final FileRecord record = new FileRecord();
-                        record.setUserId(name);
+                        record.setSpeaker(name);
                         record.setContent(content);
                         record.setTime(StringUtils.convertTime(hour, min, sec));
                         CreateRecordBody createRecordBody = new CreateRecordBody();
                         CreateRecordBody.DataAB dataAB = new CreateRecordBody.DataAB();
                         CreateRecordBody.DataBC dataBC = new CreateRecordBody.DataBC();
-                        dataAB.setSpeaker(record.getUserId());
+                        dataAB.setSpeaker(record.getSpeaker());
                         dataAB.setTime(record.getTime());
                         dataBC.setContent(record.getContent());
                         dataBC.setTime(record.getTime());
@@ -112,10 +110,6 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
                         createRecord(createRecordBody, record);
                     }
                 }
-                if (getActivity() != null) {
-                    ((MainActivity) getActivity()).showLoading(true);
-                }
-
 
             }
         });

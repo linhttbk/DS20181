@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.customs.BaseFragment;
@@ -17,6 +18,7 @@ import a20181.ds.com.ds20181.listeners.LoginCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.socket.emitter.Emitter;
 
 public class LoginFragment extends BaseFragment {
     @BindView(R.id.input_email)
@@ -38,6 +40,22 @@ public class LoginFragment extends BaseFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSocket().on("add", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getContext(), args[0].toString(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    @Override
     public int getLayoutResource() {
         return R.layout.login_fragment;
     }
@@ -50,6 +68,7 @@ public class LoginFragment extends BaseFragment {
 
     @OnClick(R.id.link_signup)
     public void onSignUpClick() {
+        getSocket().emit("test", "Hello");
         if (callback != null) callback.onCreateAccountClick();
     }
 
@@ -58,8 +77,9 @@ public class LoginFragment extends BaseFragment {
         String username = inputEmail.getText().toString();
         String password = inputPassword.getText().toString();
         if (validate(username, password)) {
-            Log.e( "onLoginClick: ","Passhash" + Base64.encode(password.getBytes(),Base64.NO_WRAP));
-            if (callback != null) callback.onLoginClick(username, Base64.encodeToString(password.getBytes(),Base64.NO_WRAP));
+            Log.e("onLoginClick: ", "Passhash" + Base64.encode(password.getBytes(), Base64.NO_WRAP));
+            if (callback != null)
+                callback.onLoginClick(username, Base64.encodeToString(password.getBytes(), Base64.NO_WRAP));
         }
 
     }

@@ -9,10 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import a20181.ds.com.ds20181.AppConstant;
 
-public abstract class BaseFragment extends Fragment implements AppConstant{
+import a20181.ds.com.ds20181.AppConstant;
+import a20181.ds.com.ds20181.MainApplication;
+import io.socket.client.Socket;
+
+public abstract class BaseFragment extends Fragment implements AppConstant {
     public abstract int getLayoutResource();
+
+    protected Socket sk;
 
     @Nullable
     @Override
@@ -21,6 +26,19 @@ public abstract class BaseFragment extends Fragment implements AppConstant{
         initView(view);
 
         return view;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        sk = ((MainApplication) (getActivity().getApplication())).getSocket();
+        sk.connect();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sk.disconnect();
     }
 
     @Override
@@ -47,5 +65,9 @@ public abstract class BaseFragment extends Fragment implements AppConstant{
 
     public void initData() {
 
+    }
+
+    public Socket getSocket() {
+        return sk;
     }
 }

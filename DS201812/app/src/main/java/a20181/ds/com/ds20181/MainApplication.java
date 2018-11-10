@@ -10,15 +10,14 @@ import a20181.ds.com.ds20181.customs.BaseApplication;
 public class MainApplication extends BaseApplication implements AppConstant {
     private Socket mSocket;
 
-    {
-        try {
-            mSocket = IO.socket(SOCKET_URL);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public Socket getSocket() {
+        if(mSocket==null){
+            try {
+                mSocket = IO.socket(SOCKET_URL);
+            } catch (URISyntaxException e) {
+                throw new RuntimeException(e);
+            }
+        }
         return mSocket;
     }
 }
