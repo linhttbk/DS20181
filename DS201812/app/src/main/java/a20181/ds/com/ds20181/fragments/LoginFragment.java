@@ -41,6 +41,7 @@ public class LoginFragment extends BaseFragment {
         getSocket().on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                if(getActivity()!=null)
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

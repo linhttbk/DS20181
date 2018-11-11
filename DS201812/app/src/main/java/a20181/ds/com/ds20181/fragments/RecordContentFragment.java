@@ -54,6 +54,50 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     private RecordAdapter recordAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String id = EMPTY;
+    private String userId = app.getCurrentUser().getUserId();
+
+    Emitter.Listener clickRecord = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            try {
+                final JSONObject data = new JSONObject(args[0].toString());
+                final String userActiveId = data.getString("userId");
+                final String recordId = data.getString("recordId");
+                final String userName = data.getString("userName");
+                if (userActiveId.equals(userId)) return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recordAdapter.setUserActives(recordId,userName);
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    Emitter.Listener unFocusRecord = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            try {
+                final JSONObject data = new JSONObject(args[0].toString());
+                final String userActiveId = data.getString("userId");
+                final String recordId = data.getString("recordId");
+                final String userName = data.getString("userName");
+                if (userActiveId.equals(userId)) return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        Toast.makeText(getActivity(), userId + " Unfocus record ", Toast.LENGTH_SHORT).show();
+                        recordAdapter.clearUserActives(recordId,userName);
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     public int getLayoutResource() {
@@ -90,7 +134,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSocket().on(EVENT_CLICK_RECORD,clickRecord);
+        getSocket().on(EVENT_CLICK_RECORD, clickRecord);
         getSocket().on(EVENT_UN_FOCUS_RECORD, unFocusRecord);
 
     }
@@ -126,6 +170,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                     }
                 });
         compositeDisposable.add(disposable);
+
     }
 
     @Override
@@ -135,9 +180,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
             jsonObject.addProperty("recordId", fileRecord.getId());
+            jsonObject.addProperty("userName", app.getCurrentUser().getName());
             getSocket().emit(EVENT_CLICK_RECORD, jsonObject);
             showDialogUpdateRecord(fileRecord, position);
-
+            Log.d("asdfasdf", "onItemClick: " + jsonObject.toString());
         }
     }
 
@@ -202,6 +248,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 JsonObject jsonObject = new JsonObject();
                 jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
                 jsonObject.addProperty("recordId", record.getId());
+                jsonObject.addProperty("userName", app.getCurrentUser().getName());
                 getSocket().emit(EVENT_UN_FOCUS_RECORD,jsonObject);
             }
         });
@@ -249,40 +296,23 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         }
         getSocket().off(EVENT_CLICK_RECORD);
     }
-    Emitter.Listener clickRecord = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            try {
-                final JSONObject data = new JSONObject(args[0].toString());
-                final String userId = data.getString("userId");
-                if (userId.equals(app.getCurrentUser().getUserId())) return;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(), userId + " Click record ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
-    Emitter.Listener unFocusRecord = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            try {
-                final JSONObject data = new JSONObject(args[0].toString());
-                final String userId = data.getString("userId");
-                if (userId.equals(app.getCurrentUser().getUserId())) return;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(getActivity(), userId + " Unfocus record ", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-    };
+//    Emitter.Listener clickRecord = new Emitter.Listener() {
+//        @Override
+//        public void call(Object... args) {
+//            try {
+//                final JSONObject data = new JSONObject(args[0].toString());
+//                final String userId = data.getString("userId");
+//                if (userId.equals(app.getCurrentUser().getUserId())) return;
+//                getActivity().runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(getActivity(), userId + " Click record ", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    };
+
 }
