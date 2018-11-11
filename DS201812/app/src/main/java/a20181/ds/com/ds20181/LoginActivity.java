@@ -168,6 +168,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         layoutProgress.setVisibility(View.GONE);
+                        Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
         compositeDisposable.add(disposable);

@@ -7,8 +7,10 @@ import io.socket.client.Socket;
 
 public interface AppConstant {
     boolean DEBUG = true;
-    String SOCKET_URL = "http://192.168.0.107:1232";
-
+    //String SOCKET_URL = "http://192.168.0.107:1232";
+   // String SOCKET_URL = "http://192.168.0.107:8000";
+    String SOCKET_URL = "https://dfp-server.herokuapp.com";
+    String BASE_URL = "https://dfp-server.herokuapp.com/api/";
     AppState app = AppState.getInstance();
     Bus bus = GlobalBus.getBus();
     int CODE_200 = 200;
@@ -20,6 +22,8 @@ public interface AppConstant {
     String EMPTY = "";
     String EVENT_TEST = "test";
     String EVENT_ADD = "add";
+    String EVENT_CLICK_RECORD = "click_record";
+    String EVENT_UN_FOCUS_RECORD = "un_focus_record";
 
       String POPUP_CONSTANT = "mPopup";
       String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";

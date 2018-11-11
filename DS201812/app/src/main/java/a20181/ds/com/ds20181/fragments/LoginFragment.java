@@ -1,16 +1,11 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.customs.BaseFragment;
@@ -18,6 +13,7 @@ import a20181.ds.com.ds20181.listeners.LoginCallback;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class LoginFragment extends BaseFragment {
@@ -42,15 +38,28 @@ public class LoginFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSocket().on("add", new Emitter.Listener() {
+        getSocket().on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
-            public void call(final Object... args) {
+            public void call(Object... args) {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getContext(), args[0].toString(), Toast.LENGTH_SHORT).show();
+                        Log.e( "call: ", "connect");
                     }
                 });
+
+            }
+        });
+        getSocket().on(Socket.EVENT_CONNECT_TIMEOUT, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e( "call: ", "time out");
+            }
+        });
+        getSocket().on(Socket.EVENT_CONNECT_ERROR, new Emitter.Listener() {
+            @Override
+            public void call(Object... args) {
+                Log.e( "call: ", args[0].toString());
             }
         });
     }
@@ -68,7 +77,6 @@ public class LoginFragment extends BaseFragment {
 
     @OnClick(R.id.link_signup)
     public void onSignUpClick() {
-        getSocket().emit("test", "Hello");
         if (callback != null) callback.onCreateAccountClick();
     }
 

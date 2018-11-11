@@ -4,6 +4,8 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.security.keystore.UserNotAuthenticatedException;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
@@ -14,9 +16,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import a20181.ds.com.ds20181.AppConstant;
 import a20181.ds.com.ds20181.MainActivity;
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.adapters.RecordAdapter;
@@ -36,8 +44,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import io.socket.emitter.Emitter;
 
-public class RecordContentFragment extends BaseFragment implements RecordAdapter.ItemClickListener {
+public class RecordContentFragment extends BaseFragment implements RecordAdapter.ItemClickListener, AppConstant {
 
     @BindView(R.id.rcv_content_recorded)
     RecyclerView rcvContent;
@@ -78,6 +87,13 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
 
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getSocket().on(EVENT_CLICK_RECORD,clickRecord);
+        getSocket().on(EVENT_UN_FOCUS_RECORD, unFocusRecord);
+
+    }
 
     private void initFileRecord() {
 
@@ -116,6 +132,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     public void onItemClick(View view, int position) {
         FileRecord fileRecord = recordAdapter.getItem(position);
         if (fileRecord != null) {
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
+            jsonObject.addProperty("recordId", fileRecord.getId());
+            getSocket().emit(EVENT_CLICK_RECORD, jsonObject);
             showDialogUpdateRecord(fileRecord, position);
 
         }
@@ -179,6 +199,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
+                jsonObject.addProperty("recordId", record.getId());
+                getSocket().emit(EVENT_UN_FOCUS_RECORD,jsonObject);
             }
         });
 
@@ -223,5 +247,42 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         if (compositeDisposable != null) {
             compositeDisposable.dispose();
         }
+        getSocket().off(EVENT_CLICK_RECORD);
     }
+    Emitter.Listener clickRecord = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            try {
+                final JSONObject data = new JSONObject(args[0].toString());
+                final String userId = data.getString("userId");
+                if (userId.equals(app.getCurrentUser().getUserId())) return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), userId + " Click record ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    Emitter.Listener unFocusRecord = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            try {
+                final JSONObject data = new JSONObject(args[0].toString());
+                final String userId = data.getString("userId");
+                if (userId.equals(app.getCurrentUser().getUserId())) return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), userId + " Unfocus record ", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 }

@@ -138,16 +138,16 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
 
     @Override
     public void onItemClick(View view, int position) {
+        FileFilm film = adapter.getItem(position);
+        if (film == null || film.isHeader() || app.getCurrentUser() == null) return;
         switch (view.getId()) {
             case R.id.root:
-                FileFilm film = adapter.getItem(position);
-                if (film == null || film.isHeader()) return;
                 String id = film.getId();
                 ((MainActivity) getActivity()).showContentRecord(id);
                 break;
             case R.id.imgMore:
                 final PopupMenu popup = new PopupMenu(getContext(), view);
-                popup.getMenuInflater().inflate(R.menu.dialog_menu, popup.getMenu());
+                    popup.getMenuInflater().inflate(R.menu.dialog_menu, popup.getMenu());
                 //Show icon for menu
                 try {
                     Field[] fields = popup.getClass().getDeclaredFields();
