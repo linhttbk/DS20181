@@ -17,4 +17,5 @@
     <color name="black_semi_transparent">#B2000000</color>
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
+    <color name="bg_divider_red">#e7ff0008</color>
 </resources>

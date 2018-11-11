@@ -2,6 +2,9 @@ package a20181.ds.com.ds20181.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FileRecord {
     @SerializedName("_id")
     private String id;
@@ -13,6 +16,8 @@ public class FileRecord {
     private String content;
     @SerializedName("time")
     private int time;
+
+    private List<String> userActives = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -48,5 +53,31 @@ public class FileRecord {
 
     public String getFileId() {
         return fileId;
+    }
+
+    public void setFileId(String fileId) {
+        this.fileId = fileId;
+    }
+
+    public void setUserActives(List<String> userActives) {
+        this.userActives = userActives;
+    }
+
+    public List<String> getUserActives() {
+        return userActives;
+    }
+
+    public void addUserActive(String userName){
+        userActives.add(userName);
+    }
+
+    public void deleteUserActive(String userName){
+//        for (int i = 0; i < userActives.size(); i++){
+//            if (userActives.get(i).equals(userName)){
+//                userActives.remove(i);
+//                break;
+//            }
+//        }
+        userActives.remove(userName);
     }
 }
