@@ -23,4 +23,5 @@
     <string name="share_file">Chia sẻ</string>
     <string name="delete_file">Xóa</string>
     <string name="edit_file_lbl">Chỉnh sửa File</string>
+    <string name="msg_login_fail">Tài khoản hoặc mật khẩu không chính xác</string>
 </resources>

@@ -6,7 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/addRecord"
+        android:layout_above="@+id/finishStream"
         android:layout_marginBottom="@dimen/margin_normal"
         android:orientation="vertical">
 
@@ -64,19 +64,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:layout_above="@+id/finishStream"
-        android:id="@+id/addRecord"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_large"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_large"
-        android:background="@drawable/bg_button_conner"
-        android:text="Thêm bản ghi"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_title" />
     <Button
         android:id="@+id/finishStream"
         android:layout_width="match_parent"

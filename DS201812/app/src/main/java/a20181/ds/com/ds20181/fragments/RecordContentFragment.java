@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +25,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import a20181.ds.com.ds20181.AppAction;
 import a20181.ds.com.ds20181.AppConstant;
 import a20181.ds.com.ds20181.MainActivity;
 import a20181.ds.com.ds20181.R;
@@ -34,6 +36,10 @@ import a20181.ds.com.ds20181.models.CreateRecordBody;
 import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.models.UpdateRecordBody;
 import a20181.ds.com.ds20181.models.User;
+import a20181.ds.com.ds20181.patterns.Command;
+import a20181.ds.com.ds20181.patterns.CommandCallBack;
+import a20181.ds.com.ds20181.patterns.CommandStack;
+import a20181.ds.com.ds20181.patterns.ErrorCallback;
 import a20181.ds.com.ds20181.services.AppClient;
 import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
@@ -46,7 +52,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.socket.emitter.Emitter;
 
-public class RecordContentFragment extends BaseFragment implements RecordAdapter.ItemClickListener, AppConstant {
+public class RecordContentFragment extends BaseFragment implements RecordAdapter.ItemClickListener, AppConstant, CommandCallBack, ErrorCallback {
 
     @BindView(R.id.rcv_content_recorded)
     RecyclerView rcvContent;
@@ -55,6 +61,8 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     private String id = EMPTY;
     private String userId = app.getCurrentUser().getUserId();
+
+    private CommandStack commandStack = new CommandStack();
 
     Emitter.Listener clickRecord = new Emitter.Listener() {
         @Override
@@ -68,7 +76,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        recordAdapter.setUserActives(recordId,userName);
+                        recordAdapter.setUserActives(recordId, userName);
                     }
                 });
             } catch (JSONException e) {
@@ -86,13 +94,46 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 final String recordId = data.getString("recordId");
                 final String userName = data.getString("userName");
                 if (userActiveId.equals(userId)) return;
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
 //                        Toast.makeText(getActivity(), userId + " Unfocus record ", Toast.LENGTH_SHORT).show();
-                        recordAdapter.clearUserActives(recordId,userName);
-                    }
-                });
+                            recordAdapter.clearUserActives(recordId, userName);
+                        }
+                    });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    Emitter.Listener editRecord = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.e("call: ", args.toString());
+            try {
+                Log.e("call: ", args.toString());
+                final JSONObject data = new JSONObject(args[0].toString());
+                final String userActiveId = data.getString("userId");
+                final JSONObject record = data.getJSONObject("record");
+                final String recordId = record.getString("_id");
+                final String content = record.getString("content");
+                final String spealker = record.getString("speaker");
+                final int time = record.getInt("time");
+                if (userActiveId.equals(userId)) return;
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            recordAdapter.update(recordId, spealker, content, time);
+//                            JsonObject jsonObject = new JsonObject();
+//                            jsonObject.addProperty("userId",userActiveId);
+//                            jsonObject.addProperty("recordId", recordId);
+//                            jsonObject.addProperty("userName",app.getCurrentUser().getName());
+//                            getSocket().emit(EVENT_UN_FOCUS_RECORD,jsonObject);
+
+                        }
+                    });
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -128,6 +169,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     public void initData() {
         super.initData();
         initFileRecord();
+        commandStack.setCallBack(this);
 
     }
 
@@ -136,8 +178,18 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         super.onCreate(savedInstanceState);
         getSocket().on(EVENT_CLICK_RECORD, clickRecord);
         getSocket().on(EVENT_UN_FOCUS_RECORD, unFocusRecord);
+        getSocket().on(EVENT_EDIT_RECORD, editRecord);
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).showAllIcon(true);
+        }
+    }
+
 
     private void initFileRecord() {
 
@@ -157,6 +209,9 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                         if (getActivity() != null)
                             ((MainActivity) getActivity()).showLoading(false);
                         List<FileRecord> result = (ArrayList) o;
+                        for (FileRecord record : result) {
+                            record.setCallBack(RecordContentFragment.this);
+                        }
                         recordAdapter.set(result);
                     }
                 }, new Consumer<Throwable>() {
@@ -249,13 +304,53 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
                 jsonObject.addProperty("recordId", record.getId());
                 jsonObject.addProperty("userName", app.getCurrentUser().getName());
-                getSocket().emit(EVENT_UN_FOCUS_RECORD,jsonObject);
+                getSocket().emit(EVENT_UN_FOCUS_RECORD, jsonObject);
             }
         });
 
         edtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         edtSecond.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         dialog.show();
+    }
+
+    private void undoRedoRecord(final FileRecord item, String recordId, UpdateRecordBody recordBody, final int position, final boolean isUndo) {
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).showLoading(true);
+        }
+        Disposable disposable = AppClient.getAPIService().updateRecord(app.getCookie(), recordId, recordBody)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<FileRecord>() {
+                    @Override
+                    public void accept(FileRecord result) throws Exception {
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).showLoading(false);
+                        }
+                        if (position != -1)
+                            recordAdapter.update(position, result);
+                        else
+                            recordAdapter.addItem(result);
+                        if (item == null) return;
+                        item.setCallBack(RecordContentFragment.this);
+                        if (isUndo) {
+                            commandStack.updateRedo(item);
+                        } else {
+                            commandStack.updateUndo(item);
+                        }
+
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).showLoading(false);
+                            Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        compositeDisposable.add(disposable);
+
     }
 
     private void updateRecord(final FileRecord record, UpdateRecordBody recordBody, final int position) {
@@ -273,6 +368,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                             Toast.makeText(getActivity(), getString(R.string.msg_update_success), Toast.LENGTH_SHORT).show();
                         }
                         recordAdapter.update(position, result);
+                        commandStack.doCommand(record);
 
                     }
                 }, new Consumer<Throwable>() {
@@ -289,12 +385,71 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).showAllIcon(false);
+        }
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         if (compositeDisposable != null) {
             compositeDisposable.dispose();
         }
         getSocket().off(EVENT_CLICK_RECORD);
+
+    }
+
+    @Subscribe
+    public void onAppAction(AppAction action) {
+        if (action == AppAction.UNDO_CLICK) {
+            commandStack.undo();
+        } else if (action == AppAction.REDO_CLICK) {
+            commandStack.redo();
+        }
+    }
+
+    @Override
+    public void undo(Command command) {
+        if (command instanceof FileRecord) {
+            FileRecord record = (FileRecord) command;
+
+            UpdateRecordBody.Options options = new UpdateRecordBody.Options(record.getFileId(), record.getSpeaker(), record.getTime(), record.getContent());
+            UpdateRecordBody updateRecordBody = new UpdateRecordBody();
+            updateRecordBody.setOptions(options);
+            String recordId = record.getId();
+            FileRecord item = recordAdapter.getRecordByRecordById(recordId);
+            int position = recordAdapter.getPositionByRecordById(recordId);
+            undoRedoRecord(item, recordId, updateRecordBody, position, true);
+
+        }
+    }
+
+    @Override
+    public void redo(Command command) {
+        if (command instanceof FileRecord) {
+            FileRecord record = (FileRecord) command;
+            UpdateRecordBody.Options options = new UpdateRecordBody.Options(record.getFileId(), record.getSpeaker(), record.getTime(), record.getContent());
+            UpdateRecordBody updateRecordBody = new UpdateRecordBody();
+            updateRecordBody.setOptions(options);
+            String recordId = record.getId();
+            int position = recordAdapter.getPositionByRecordById(recordId);
+            FileRecord item = recordAdapter.getRecordByRecordById(recordId);
+            undoRedoRecord(item, recordId, updateRecordBody, position, false);
+
+        }
+    }
+
+    @Override
+    public void errorUndo() {
+        Toast.makeText(getContext(), "Không thể Undo", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void errorRedo() {
+        Toast.makeText(getContext(), "Không thể Redo", Toast.LENGTH_SHORT).show();
     }
 //    Emitter.Listener clickRecord = new Emitter.Listener() {
 //        @Override

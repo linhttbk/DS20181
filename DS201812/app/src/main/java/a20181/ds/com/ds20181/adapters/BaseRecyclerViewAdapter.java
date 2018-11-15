@@ -33,15 +33,22 @@ public abstract class BaseRecyclerViewAdapter<T>
         notifyDataSetChanged();
     }
 
+    public void removeItem(int position) {
+        if (position < 0 || mDataList == null || position >= mDataList.size()) return;
+        mDataList.remove(position);
+        notifyDataSetChanged();
+    }
+
     public void set(List<T> dataList) {
         List<T> clone = new ArrayList<>(dataList);
         mDataList.clear();
         mDataList.addAll(clone);
         notifyDataSetChanged();
     }
-    public void update(int position,T t){
-        if(position< 0 || mDataList==null||position >= mDataList.size() || t ==null ) return;
-        mDataList.set(position,t);
+
+    public void update(int position, T t) {
+        if (position < 0 || mDataList == null || position >= mDataList.size() || t == null) return;
+        mDataList.set(position, t);
         notifyItemChanged(position);
     }
 

@@ -5,12 +5,16 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+
+import com.squareup.otto.Subscribe;
 
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
@@ -18,6 +22,7 @@ import a20181.ds.com.ds20181.fragments.RecordContentFragment;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, AppConstant {
@@ -30,13 +35,24 @@ public class MainActivity extends AppCompatActivity
     DrawerLayout drawer;
     @BindView(R.id.disableTouchView)
     DisableTouchView layoutProgress;
+    @BindView(R.id.swrBase)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.imgAdd)
+    ImageView imgAdd;
+    @BindView(R.id.imgUndo)
+    ImageView imgUndo;
+    @BindView(R.id.imgRedo)
+    ImageView imgRedo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bus.register(this);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
+        swipeRefreshLayout.setEnabled(false);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -120,6 +136,30 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(System.currentTimeMillis() + "");
         transaction.commit();
+    }
+    public void showAllIcon(boolean isShown){
+        showIcon(imgAdd,isShown);
+        showIcon(imgRedo,isShown);
+        showIcon(imgUndo,isShown);
+    }
+
+    public void showIcon(ImageView icon, boolean isShown) {
+        icon.setVisibility(isShown ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick(R.id.imgUndo)
+    public void onUndoClick() {
+        bus.post(AppAction.UNDO_CLICK);
+    }
+
+    @OnClick(R.id.imgRedo)
+    public void onRedoClick() {
+        bus.post(AppAction.REDO_CLICK);
+    }
+
+    @Subscribe
+    public void onAppAction(AppAction action) {
+
     }
 
     @Override

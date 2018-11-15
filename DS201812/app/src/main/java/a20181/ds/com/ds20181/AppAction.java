@@ -5,6 +5,9 @@ import com.google.gson.Gson;
 public enum AppAction {
 
     ADD_RECORD("add_record"),
+    UNDO_CLICK("undo_record"),
+    REDO_CLICK("redo_record"),
+    SHOW_ICON_UNDO_REDO("redo_record"),
     FINISH_RECORD("finish_record");
 
     public String value;

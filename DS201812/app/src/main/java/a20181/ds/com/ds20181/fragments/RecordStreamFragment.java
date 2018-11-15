@@ -55,12 +55,12 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
         ButterKnife.bind(this, view);
     }
 
-    @OnClick(R.id.addRecord)
-    public void addStreamContent() {
-        showDialog();
-
-
-    }
+//    @OnClick(R.id.addRecord)
+//    public void addStreamContent() {
+//        showDialog();
+//
+//
+//    }
 
     private void showDialog() {
         final Dialog dialog = new Dialog(getContext());

@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
         ft.replace(R.id.root, loginFragment);
         ft.commit();
         User user = app.getCurrentUser();
-        if(user==null) return;
+        if (user == null) return;
 
 
     }
@@ -134,7 +134,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                 .flatMap(new Function<Response, ObservableSource<?>>() {
                     @Override
                     public ObservableSource<?> apply(Response response) throws Exception {
-                        if (response != null && response.isSuccessful()) {
+                        if (response != null && response.isSuccessful() && response.body() != null) {
                             ResponseLogin responseLogin = (ResponseLogin) response.body();
                             User user = responseLogin.getUser();
                             Headers headers = response.headers();
@@ -144,9 +144,17 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                                 app.setCurrentUser(user);
                                 Log.e("apply: ", "Login success");
                                 return AppClient.getAPIService().getAllUser(cookie);
+                            } else {
+                                Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(LoginActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, R.string.msg_login_fail, Toast.LENGTH_SHORT).show();
+                                }
+                            });
+
                         }
                         return null;
                     }
@@ -156,19 +164,18 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
                     @Override
                     public void accept(Object o) throws Exception {
                         layoutProgress.setVisibility(View.GONE);
-                        Log.e("accept: ", o.toString());
                         if (o != null && o instanceof ListUserResponse) {
                             List<User> users = ((ListUserResponse) o).getData();
                             app.setListUser(users);
-                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         }
 
                     }
                 }, new Consumer<Throwable>() {
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void accept(final Throwable throwable) throws Exception {
                         layoutProgress.setVisibility(View.GONE);
-                        Toast.makeText(LoginActivity.this, throwable.getMessage(), Toast.LENGTH_SHORT).show();
+
                     }
                 });
         compositeDisposable.add(disposable);

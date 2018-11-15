@@ -79,7 +79,7 @@ public interface APIService {
 
     @Headers({"Content-Type: application/json"})
     @DELETE("file/{id}")
-    Observable<BaseResponse> deleteFile(@Header("Cookie") String cookie, @Path("id") String idFile);
+    Observable<Response<Void>> deleteFile(@Header("Cookie") String cookie, @Path("id") String idFile);
 
     @Headers({"Content-Type: application/json"})
     @DELETE("record/{id}")

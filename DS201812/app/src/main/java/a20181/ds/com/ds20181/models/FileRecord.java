@@ -5,7 +5,10 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileRecord {
+import a20181.ds.com.ds20181.patterns.Command;
+import a20181.ds.com.ds20181.patterns.CommandCallBack;
+
+public class FileRecord implements Command {
     @SerializedName("_id")
     private String id;
     @SerializedName("fileId")
@@ -16,6 +19,8 @@ public class FileRecord {
     private String content;
     @SerializedName("time")
     private int time;
+
+    private CommandCallBack callBack;
 
     private List<String> userActives = new ArrayList<>();
 
@@ -67,17 +72,34 @@ public class FileRecord {
         return userActives;
     }
 
-    public void addUserActive(String userName){
-        userActives.add(userName);
+    public void addUserActive(String userName) {
+        if (userActives != null) {
+            if (userActives.contains(userName)) return;
+            userActives.add(userName);
+        }
     }
 
-    public void deleteUserActive(String userName){
+    public void deleteUserActive(String userName) {
 //        for (int i = 0; i < userActives.size(); i++){
 //            if (userActives.get(i).equals(userName)){
 //                userActives.remove(i);
 //                break;
 //            }
 //        }
-        userActives.remove(userName);
+            userActives.remove(userName);
+    }
+
+    @Override
+    public void undo() {
+        if(callBack!=null) callBack.undo(this);
+    }
+
+    @Override
+    public void redo() {
+        if(callBack!=null) callBack.redo(this);
+    }
+
+    public void setCallBack(CommandCallBack callBack) {
+        this.callBack = callBack;
     }
 }

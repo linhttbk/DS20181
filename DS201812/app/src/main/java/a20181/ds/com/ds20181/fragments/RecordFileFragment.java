@@ -21,6 +21,7 @@ import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.adapters.BaseRecyclerViewAdapter;
 import a20181.ds.com.ds20181.adapters.FileFilmAdapter;
 import a20181.ds.com.ds20181.customs.BaseFragment;
+import a20181.ds.com.ds20181.models.BaseResponse;
 import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
@@ -34,6 +35,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import retrofit2.Response;
 
 public class RecordFileFragment extends BaseFragment implements BaseRecyclerViewAdapter.ItemClickListener, AppConstant {
     @BindView(R.id.rcvList)
@@ -137,8 +139,8 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        FileFilm film = adapter.getItem(position);
+    public void onItemClick(View view, final int position) {
+        final FileFilm film = adapter.getItem(position);
         if (film == null || film.isHeader() || app.getCurrentUser() == null) return;
         switch (view.getId()) {
             case R.id.root:
@@ -147,7 +149,7 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                 break;
             case R.id.imgMore:
                 final PopupMenu popup = new PopupMenu(getContext(), view);
-                    popup.getMenuInflater().inflate(R.menu.dialog_menu, popup.getMenu());
+                popup.getMenuInflater().inflate(R.menu.dialog_menu, popup.getMenu());
                 //Show icon for menu
                 try {
                     Field[] fields = popup.getClass().getDeclaredFields();
@@ -172,6 +174,10 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                             case R.id.share_file:
                                 popup.dismiss();
                                 break;
+                            case R.id.delete_ring:
+                                popup.dismiss();
+                                deleteFile(film.getId(), position);
+                                break;
                         }
                         return false;
                     }
@@ -180,6 +186,39 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                 break;
         }
 
+    }
+
+    private void deleteFile(String fileId, final int position) {
+        if (app.getCurrentUser() == null) return;
+        if (getActivity() != null) {
+            ((MainActivity) getActivity()).showLoading(true);
+        }
+        Disposable disposable = AppClient.getAPIService().deleteFile(app.getCookie(), fileId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response>() {
+                    @Override
+                    public void accept(Response response) throws Exception {
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).showLoading(false);
+                            if (response.code() == CODE_204) {
+                                Toast.makeText(getContext(),"Xóa thành công", Toast.LENGTH_SHORT).show();
+                                adapter.removeItem(position);
+                            }else {
+                                Toast.makeText(getContext(),"Xóa thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (getActivity() != null) {
+                            ((MainActivity) getActivity()).showLoading(false);
+                            Toast.makeText(getContext(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        compositeDisposable.add(disposable);
     }
 
 

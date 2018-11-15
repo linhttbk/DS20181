@@ -14,6 +14,7 @@ public interface AppConstant {
     AppState app = AppState.getInstance();
     Bus bus = GlobalBus.getBus();
     int CODE_200 = 200;
+    int CODE_204 = 204;
     int CODE_1001 = 1001;
     int CODE_1002 = 1002;
     String PREF_USER = "login";
@@ -24,7 +25,10 @@ public interface AppConstant {
     String EVENT_ADD = "add";
     String EVENT_CLICK_RECORD = "click_record";
     String EVENT_UN_FOCUS_RECORD = "un_focus_record";
+    String EVENT_EDIT_RECORD = "edit_record";
 
       String POPUP_CONSTANT = "mPopup";
       String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
+      int REQUEST_READ_STORAGE = 112;
+      int FILE_REQUEST_CODE = 97;
 }

@@ -16,7 +16,46 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/imgAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:padding="@dimen/padding_4dp"
+                    android:src="@drawable/ic_add"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imgRedo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:layout_toLeftOf="@+id/imgAdd"
+                    android:padding="@dimen/padding_4dp"
+                    android:src="@drawable/ic_redo"
+                    android:visibility="gone" />
+
+                <ImageView
+                    android:id="@+id/imgUndo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/margin_small"
+                    android:layout_toLeftOf="@+id/imgRedo"
+                    android:padding="@dimen/padding_4dp"
+                    android:src="@drawable/ic_undo"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+        </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 

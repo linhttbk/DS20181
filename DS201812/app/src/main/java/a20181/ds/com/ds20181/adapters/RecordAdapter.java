@@ -43,15 +43,15 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
         ((ViewHolder) holder).tvRecordTime.setText(StringUtils.timeConversion(fileRecord.getTime()));
         ((ViewHolder) holder).tvRecordContent.setText(fileRecord.getContent());
         List<String> activeUserIds = fileRecord.getUserActives();
-        if (activeUserIds.size() != 0){
+        if (activeUserIds.size() != 0) {
             Log.d("asdfasdf", "onBindViewHolder: " + activeUserIds.size());
             String content = "";
 //            if (activeUserIds.size() > 2){
 //                content += "...";
 //            }
 
-            for (String s : activeUserIds){
-                if (s.equals(activeUserIds.get(activeUserIds.size() - 1))){
+            for (String s : activeUserIds) {
+                if (s.equals(activeUserIds.get(activeUserIds.size() - 1))) {
                     content += s;
                     break;
                 }
@@ -74,6 +74,45 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
     }
 
     @Override
+    public void addItem(FileRecord record) {
+        if (mDataList == null) mDataList = new ArrayList<>();
+        mDataList.add(record);
+        Collections.sort(mDataList, new Comparator<FileRecord>() {
+            @Override
+            public int compare(FileRecord record, FileRecord t1) {
+                if (record.getTime() == t1.getTime()) return 0;
+                if (record.getTime() > t1.getTime()) return 1;
+                return -1;
+            }
+        });
+        notifyDataSetChanged();
+    }
+
+    public FileRecord getRecordByRecordById(String idRecord) {
+        if (mDataList != null && !mDataList.isEmpty()) {
+            for (int i = 0; i < mDataList.size(); i++) {
+                FileRecord record = mDataList.get(i);
+                if (record.getId().equals(idRecord))
+                    return record;
+            }
+        }
+        return null;
+    }
+
+
+    public int getPositionByRecordById(String idRecord) {
+        if (mDataList != null && !mDataList.isEmpty()) {
+            for (int i = 0; i < mDataList.size(); i++) {
+                FileRecord record = mDataList.get(i);
+                if (record.getId().equals(idRecord))
+                    return i;
+            }
+        }
+        return -1;
+    }
+
+
+    @Override
     public void update(int position, FileRecord record) {
         super.update(position, record);
         if (mDataList.size() > 0) {
@@ -89,9 +128,9 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
         }
     }
 
-    public void setUserActives(String recordId, String userName){
-        for (FileRecord fileRecord : mDataList){
-            if (fileRecord.getId().equals(recordId)){
+    public void setUserActives(String recordId, String userName) {
+        for (FileRecord fileRecord : mDataList) {
+            if (fileRecord.getId().equals(recordId)) {
                 fileRecord.addUserActive(userName);
             }
         }
@@ -99,9 +138,20 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
         notifyDataSetChanged();
     }
 
-    public void clearUserActives(String recordId, String userName){
-        for (FileRecord fileRecord : mDataList){
-            if (fileRecord.getId().equals(recordId)){
+    public void update(String recordId, String speaker, String content, int time) {
+        for (FileRecord fileRecord : mDataList) {
+            if (fileRecord.getId().equals(recordId)) {
+                fileRecord.setSpeaker(speaker);
+                fileRecord.setContent(content);
+                fileRecord.setTime(time);
+            }
+        }
+        notifyDataSetChanged();
+    }
+
+    public void clearUserActives(String recordId, String userName) {
+        for (FileRecord fileRecord : mDataList) {
+            if (fileRecord.getId().equals(recordId)) {
                 fileRecord.deleteUserActive(userName);
             }
         }
@@ -122,7 +172,6 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
 
         @BindView(R.id.vw_divider)
         View vwDivider;
-
 
 
         public ViewHolder(View itemView) {
