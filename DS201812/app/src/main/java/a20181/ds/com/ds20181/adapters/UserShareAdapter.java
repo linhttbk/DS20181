@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -23,15 +25,27 @@ public class UserShareAdapter extends ArrayAdapter<User> {
     private List<User> mItems;
     private List<User> clones;
 
+    private ItemClick itemClick;
+
     public UserShareAdapter(@NonNull Context context, int resource, @NonNull List<User> objects) {
         super(context, resource, objects);
         mItems = objects;
         clones = new ArrayList<>(objects);
     }
 
+    public void setItemClick(ItemClick itemClick) {
+        this.itemClick = itemClick;
+    }
+
+    public interface ItemClick {
+        void onItemClick(User user);
+    }
 
     public void replace(List<User> list) {
         if (list == null || list.isEmpty()) return;
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i).setPer(1);
+        }
         mItems.clear();
         clones.clear();
         mItems.addAll(list);
@@ -42,7 +56,7 @@ public class UserShareAdapter extends ArrayAdapter<User> {
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+    public View getView(final int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         Log.e("getView: ", "Hello" + position + " " + mItems.size());
         View row = convertView;
         ViewHolder holder = null;
@@ -53,17 +67,50 @@ public class UserShareAdapter extends ArrayAdapter<User> {
         } else {
             holder = (ViewHolder) row.getTag();
         }
-        ((ViewHolder) holder).tvName.setText(mItems.get(position).getName());
+        final User user = mItems.get(position);
+        if (user != null) {
+            ((ViewHolder) holder).tvName.setText(user.getName());
+            if (user.getPer() == 1) ((ViewHolder) holder).btnRead.setChecked(true);
+            if (user.getPer() == 2) ((ViewHolder) holder).btnWrite.setChecked(true);
+            ((ViewHolder) holder).tvName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (itemClick != null) itemClick.onItemClick(user);
+                }
+            });
+            ((ViewHolder) holder).radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int i) {
+                    switch (i) {
+                        case R.id.btnRead:
+                            user.setPer(1);
+                            break;
+                        case R.id.btnWrite:
+                            user.setPer(2);
+                            break;
+                    }
+                }
+            });
+        }
+
         return row;
     }
 
     public class ViewHolder {
         @BindView(R.id.tvName)
         TextView tvName;
+        @BindView(R.id.btnRead)
+        RadioButton btnRead;
+        @BindView(R.id.btnWrite)
+        RadioButton btnWrite;
+        @BindView(R.id.radioGroup)
+        RadioGroup radioGroup;
 
         public ViewHolder(View row) {
             ButterKnife.bind(this, row);
+
         }
+
     }
 
     @NonNull
@@ -95,7 +142,9 @@ public class UserShareAdapter extends ArrayAdapter<User> {
                     // avoids unchecked cast warning when using mDepartments.addAll((ArrayList<Department>) results.values);
                     for (Object object : (List<?>) filterResults.values) {
                         if (object instanceof User) {
-                            mItems.add((User) object);
+                            User user = (User) object;
+                            user.setPer(1);
+                            mItems.add(user);
                         }
                     }
                     notifyDataSetChanged();

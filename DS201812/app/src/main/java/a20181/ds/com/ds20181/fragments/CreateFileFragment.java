@@ -29,6 +29,7 @@ import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.ListUserResponse;
+import a20181.ds.com.ds20181.models.Owner;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
 import a20181.ds.com.ds20181.utils.ListUtil;
@@ -110,14 +111,25 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
                     });
             compositeDisposable.add(disposable);
         }
-
-        autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        adapter.setItemClick(new UserShareAdapter.ItemClick() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                User item = adapter.getItem(i);
-                if (item != null) {
-                    tagLayout.addTag(item.getName());
-                    shareList.add(item);
+            public void onItemClick(User user) {
+                if (user != null) {
+                    boolean contain = false;
+                    for (User share : shareList) {
+                        if (share.getUserId().equals(user.getUserId())) {
+                            contain = true;
+                            break;
+                        }
+                    }
+                    if (contain) {
+                        Toast.makeText(getContext(), "Người dùng đã tồn tại", Toast.LENGTH_SHORT).show();
+
+                    } else {
+                        tagLayout.addTag(user.getName());
+                        shareList.add(user);
+                    }
+                    autoCompleteTextView.dismissDropDown();
 
                 }
             }
@@ -157,10 +169,19 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
             return;
         }
         ((MainActivity) getActivity()).showLoading(true);
-        List<String> shares = new ArrayList<>();
+        List<Owner> shares = new ArrayList<>();
         if (!ListUtil.isEmpty(shareList)) {
             for (User user : shareList) {
-                if (!shares.contains(user.getUserId())) shares.add(user.getUserId());
+                boolean contain = false;
+                for (int i = 0; i < shares.size(); i++) {
+                    Owner owner = shares.get(i);
+                    if (owner.getId().equals(user.getUserId())) {
+                        contain = true;
+                        break;
+                    }
+                }
+                if (!contain) shares.add(new Owner(user.getUserId(), user.getPer()));
+
             }
 
 
@@ -214,8 +235,10 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
 //    }
     @Subscribe
     public void onAppAction(AppAction action) {
-        if (action == AppAction.FINISH_RECORD) {
+        if (action == AppAction.FINISH_STREAM) {
             btn_done.setVisibility(View.VISIBLE);
+            edtNameFile.setEnabled(false);
+            autoCompleteTextView.setEnabled(false);
         }
     }
 
@@ -223,10 +246,12 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
     public void onClickDone() {
         getActivity().onBackPressed();
     }
+
     @OnClick(R.id.btn_cancel)
-    public void onCancelClick(){
+    public void onCancelClick() {
         getActivity().onBackPressed();
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

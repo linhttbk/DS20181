@@ -12,6 +12,12 @@ import java.util.List;
 public abstract class BaseRecyclerViewAdapter<T>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected LayoutInflater mInflater;
+
+    public List<T> getAll() {
+        if (mDataList == null) return new ArrayList<>();
+        return mDataList;
+    }
+
     protected List<T> mDataList;
     protected ItemClickListener mItemClickListener;
 

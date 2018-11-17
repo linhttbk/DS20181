@@ -9,7 +9,7 @@ public class BodyFilePost {
     @SerializedName("name")
     private String name;
     @SerializedName("owners")
-    private List<String> owners = new ArrayList<>();
+    private List<Owner> owners = new ArrayList<>();
     @SerializedName("creatAt")
     private long creatAt;
 
@@ -21,11 +21,11 @@ public class BodyFilePost {
         this.name = name;
     }
 
-    public List<String> getOwners() {
+    public List<Owner> getOwners() {
         return owners;
     }
 
-    public void setOwners(List<String> owners) {
+    public void setOwners(List<Owner> owners) {
         this.owners = owners;
     }
 

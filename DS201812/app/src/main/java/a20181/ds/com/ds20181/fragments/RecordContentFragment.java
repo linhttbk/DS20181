@@ -1,6 +1,8 @@
 package a20181.ds.com.ds20181.fragments;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,6 +35,7 @@ import a20181.ds.com.ds20181.adapters.RecordAdapter;
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.InputFilterMinMax;
 import a20181.ds.com.ds20181.models.CreateRecordBody;
+import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.models.UpdateRecordBody;
 import a20181.ds.com.ds20181.models.User;
@@ -59,7 +62,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
 
     private RecordAdapter recordAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private String id = EMPTY;
+    private FileFilm fileFilm = null;
     private String userId = app.getCurrentUser().getUserId();
 
     private CommandStack commandStack = new CommandStack();
@@ -76,7 +79,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        recordAdapter.setUserActives(recordId, userName);
+                        User user = new User();
+                        user.setUserId(userActiveId);
+                        user.setName(userName);
+                        recordAdapter.setUserActives(recordId, user);
                     }
                 });
             } catch (JSONException e) {
@@ -98,8 +104,11 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            User user = new User();
+                            user.setUserId(userActiveId);
+                            user.setName(userName);
 //                        Toast.makeText(getActivity(), userId + " Unfocus record ", Toast.LENGTH_SHORT).show();
-                            recordAdapter.clearUserActives(recordId, userName);
+                            recordAdapter.clearUserActives(recordId, user);
                         }
                     });
             } catch (JSONException e) {
@@ -145,10 +154,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         return R.layout.record_content_fragment;
     }
 
-    public static RecordContentFragment newInstance(String id) {
+    public static RecordContentFragment newInstance(FileFilm fileFilm) {
         Bundle args = new Bundle();
         RecordContentFragment fragment = new RecordContentFragment();
-        fragment.id = id;
+        fragment.fileFilm = fileFilm;
         fragment.setArguments(args);
         return fragment;
     }
@@ -199,7 +208,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         }
         ((MainActivity) getActivity()).showLoading(true);
         Log.e("initFileRecord: ", user.getUserId() + " xx " + app.getCurrentUser().getCookie());
-        Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), id);
+        Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), fileFilm.getId());
 
         Disposable disposable = request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
                 subscribe(new Consumer<Object>() {
@@ -230,15 +239,27 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
 
     @Override
     public void onItemClick(View view, int position) {
-        FileRecord fileRecord = recordAdapter.getItem(position);
-        if (fileRecord != null) {
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
-            jsonObject.addProperty("recordId", fileRecord.getId());
-            jsonObject.addProperty("userName", app.getCurrentUser().getName());
-            getSocket().emit(EVENT_CLICK_RECORD, jsonObject);
-            showDialogUpdateRecord(fileRecord, position);
-            Log.d("asdfasdf", "onItemClick: " + jsonObject.toString());
+        User user = app.getCurrentUser();
+        if (user == null) {
+            return;
+        }
+        if (!fileFilm.isCreator(user.getUserId()) || !fileFilm.isWriteAble(user.getUserId())) {
+            showDialogPermission();
+        } else {
+            FileRecord fileRecord = recordAdapter.getItem(position);
+            if (fileRecord != null) {
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("userId", app.getCurrentUser().getUserId());
+                    jsonObject.put("recordId", fileRecord.getId());
+                    jsonObject.put("userName", app.getCurrentUser().getName());
+                    getSocket().emit(EVENT_CLICK_RECORD, jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                showDialogUpdateRecord(fileRecord, position);
+                Log.d("asdfasdf", "onItemClick: " + jsonObject.toString());
+            }
         }
     }
 
@@ -311,6 +332,19 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         edtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         edtSecond.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         dialog.show();
+    }
+
+    private void showDialogPermission() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Quyền truy cập");
+        builder.setMessage("Bạn không có quyền chỉnh sửa File này");
+        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 
     private void undoRedoRecord(final FileRecord item, String recordId, UpdateRecordBody recordBody, final int position, final boolean isUndo) {
@@ -408,6 +442,9 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             commandStack.undo();
         } else if (action == AppAction.REDO_CLICK) {
             commandStack.redo();
+        } else if (action == AppAction.ADD_CLICK) {
+            if (getActivity() != null)
+                ((MainActivity) getActivity()).switchFragment(RecordStreamFragment.newInstance(fileFilm.getId()));
         }
     }
 
@@ -451,23 +488,5 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     public void errorRedo() {
         Toast.makeText(getContext(), "Không thể Redo", Toast.LENGTH_SHORT).show();
     }
-//    Emitter.Listener clickRecord = new Emitter.Listener() {
-//        @Override
-//        public void call(Object... args) {
-//            try {
-//                final JSONObject data = new JSONObject(args[0].toString());
-//                final String userId = data.getString("userId");
-//                if (userId.equals(app.getCurrentUser().getUserId())) return;
-//                getActivity().runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Toast.makeText(getActivity(), userId + " Click record ", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    };
 
 }

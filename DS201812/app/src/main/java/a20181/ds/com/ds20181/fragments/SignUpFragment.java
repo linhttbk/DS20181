@@ -1,12 +1,7 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 
 import a20181.ds.com.ds20181.R;
@@ -19,8 +14,8 @@ import butterknife.OnClick;
 
 
 public class SignUpFragment extends BaseFragment {
-    @BindView(R.id.input_email)
-    EditText inputEmail;
+    @BindView(R.id.input_name)
+    EditText inputName;
     @BindView(R.id.input_username)
     EditText inputUsername;
     @BindView(R.id.input_password)
@@ -49,28 +44,28 @@ public class SignUpFragment extends BaseFragment {
     @OnClick(R.id.btn_sign_up)
     public void onSignUpClick() {
         String username = inputUsername.getText().toString();
-        String email = inputEmail.getText().toString();
+        String name = inputName.getText().toString();
         String password = inputPassword.getText().toString();
-        if (validate(username, email, password)) {
-            if (callback != null) callback.signUp(username, email, password);
+        if (validate(username, name, password)) {
+            if (callback != null) callback.signUp(username, name, password);
         }
     }
 
-    public boolean validate(String username, String email, String password) {
+    public boolean validate(String username, String name, String password) {
         boolean valid = true;
         if (username.isEmpty() || StringUtils.isContainWhiteSpace(username) || !StringUtils.isAllCharacter(username)) {
-            inputUsername.setError("username must be alphanumeric characters");
+            inputUsername.setError("Tài khoản không được để trống, là chuỗi ký tự không chứa khoảng trắng!");
             valid = false;
         }
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            inputEmail.setError("enter a valid email address");
+        if (name.isEmpty()) {
+            inputName.setError("Tên không được để trống!");
             valid = false;
         } else {
-            inputEmail.setError(null);
+            inputName.setError(null);
         }
 
         if (password.isEmpty() || password.length() < 6 || password.length() > 10) {
-            inputPassword.setError("between 6 and 10 alphanumeric characters");
+            inputPassword.setError("mật khẩu phải từ 6 đến 10 ký tự");
             valid = false;
         } else {
             inputPassword.setError(null);

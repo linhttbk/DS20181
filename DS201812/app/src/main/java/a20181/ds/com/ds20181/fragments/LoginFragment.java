@@ -17,7 +17,7 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
 public class LoginFragment extends BaseFragment {
-    @BindView(R.id.input_email)
+    @BindView(R.id.input_name)
     EditText inputEmail;
     @BindView(R.id.input_password)
     EditText inputPassword;

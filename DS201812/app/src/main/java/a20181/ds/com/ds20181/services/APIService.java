@@ -11,6 +11,7 @@ import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
+import a20181.ds.com.ds20181.models.SignUpBody;
 import a20181.ds.com.ds20181.models.UpdateRecordBody;
 import io.reactivex.Observable;
 import retrofit2.Call;
@@ -38,9 +39,12 @@ public interface APIService {
     Observable<Response<ResponseLogin>> login(@Field("username") String username, @Field("password") String password);
 
 
-    @POST("signup")
+    @POST("user")
     @FormUrlEncoded
-    Call<BaseResponse> signUp(@Field("username") String username, @Field("email") String email, @Field("password") String password);
+    Call<BaseResponse> signUp(@Field("username") String username, @Field("name") String name, @Field("password") String password);
+
+    @POST("user")
+    Call<BaseResponse> signUp(@Body SignUpBody body );
 
     @Headers({"Content-Type: application/json"})
     @GET("file")

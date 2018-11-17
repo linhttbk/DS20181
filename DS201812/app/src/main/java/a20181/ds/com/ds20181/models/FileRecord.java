@@ -21,8 +21,8 @@ public class FileRecord implements Command {
     private int time;
 
     private CommandCallBack callBack;
-
-    private List<String> userActives = new ArrayList<>();
+   // @SerializedName("userOn")
+    private List<User> userActives = new ArrayList<>();
 
     public String getId() {
         return id;
@@ -64,39 +64,43 @@ public class FileRecord implements Command {
         this.fileId = fileId;
     }
 
-    public void setUserActives(List<String> userActives) {
+    public void setUserActives(List<User> userActives) {
         this.userActives = userActives;
     }
 
-    public List<String> getUserActives() {
+    public List<User> getUserActives() {
+        if (userActives == null || userActives.isEmpty()) return new ArrayList<>();
         return userActives;
     }
 
-    public void addUserActive(String userName) {
-        if (userActives != null) {
-            if (userActives.contains(userName)) return;
-            userActives.add(userName);
+    public void addUserActive(User user) {
+        if (userActives != null && user != null) {
+            for (int i = 0; i < userActives.size(); i++) {
+                User active = userActives.get(i);
+                if (active.getUserId().equals(user.getUserId())) return;
+            }
+            userActives.add(user);
         }
     }
 
-    public void deleteUserActive(String userName) {
+    public void deleteUserActive(User user) {
 //        for (int i = 0; i < userActives.size(); i++){
 //            if (userActives.get(i).equals(userName)){
 //                userActives.remove(i);
 //                break;
 //            }
 //        }
-            userActives.remove(userName);
+        userActives.remove(user);
     }
 
     @Override
     public void undo() {
-        if(callBack!=null) callBack.undo(this);
+        if (callBack != null) callBack.undo(this);
     }
 
     @Override
     public void redo() {
-        if(callBack!=null) callBack.redo(this);
+        if (callBack != null) callBack.redo(this);
     }
 
     public void setCallBack(CommandCallBack callBack) {

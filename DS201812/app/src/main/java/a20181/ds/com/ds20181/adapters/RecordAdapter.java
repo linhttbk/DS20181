@@ -18,6 +18,7 @@ import java.util.List;
 
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.models.FileRecord;
+import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,23 +43,22 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
         ((ViewHolder) holder).tvRecorderName.setText(fileRecord.getSpeaker());
         ((ViewHolder) holder).tvRecordTime.setText(StringUtils.timeConversion(fileRecord.getTime()));
         ((ViewHolder) holder).tvRecordContent.setText(fileRecord.getContent());
-        List<String> activeUserIds = fileRecord.getUserActives();
+        List<User> activeUserIds = fileRecord.getUserActives();
         if (activeUserIds.size() != 0) {
             Log.d("asdfasdf", "onBindViewHolder: " + activeUserIds.size());
-            String content = "";
-//            if (activeUserIds.size() > 2){
-//                content += "...";
-//            }
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < activeUserIds.size(); i++) {
 
-            for (String s : activeUserIds) {
-                if (s.equals(activeUserIds.get(activeUserIds.size() - 1))) {
-                    content += s;
+                String s = activeUserIds.get(i).getName();
+                if (s.equals(activeUserIds.get(activeUserIds.size() - 1).getName())) {
+                    builder.append(s);
                     break;
                 }
-                content += s + ",";
+                builder.append(s);
+                builder.append(",");
             }
 
-            ((ViewHolder) holder).tvActiveUsers.setText(content);
+            ((ViewHolder) holder).tvActiveUsers.setText(builder.toString());
             ((ViewHolder) holder).tvActiveUsers.setVisibility(View.VISIBLE);
             ((ViewHolder) holder).vwDivider.setBackgroundResource(R.color.bg_divider_red);
         } else {
@@ -128,10 +128,10 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
         }
     }
 
-    public void setUserActives(String recordId, String userName) {
+    public void setUserActives(String recordId, User user) {
         for (FileRecord fileRecord : mDataList) {
             if (fileRecord.getId().equals(recordId)) {
-                fileRecord.addUserActive(userName);
+                fileRecord.addUserActive(user);
             }
         }
 
@@ -149,10 +149,10 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
         notifyDataSetChanged();
     }
 
-    public void clearUserActives(String recordId, String userName) {
+    public void clearUserActives(String recordId, User user) {
         for (FileRecord fileRecord : mDataList) {
             if (fileRecord.getId().equals(recordId)) {
-                fileRecord.deleteUserActive(userName);
+                fileRecord.deleteUserActive(user);
             }
         }
 

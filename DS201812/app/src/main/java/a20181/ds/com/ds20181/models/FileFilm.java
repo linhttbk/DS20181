@@ -51,7 +51,7 @@ public class FileFilm {
     @SerializedName("creatAt")
     private long createAt;
     @SerializedName("owners")
-    private List<String> owners;
+    private List<Owner> owners;
 
     public boolean isHeader() {
         return isHeader;
@@ -66,7 +66,25 @@ public class FileFilm {
         return userId.equals(creator);
     }
 
-    public void setOwners(List<String> owners) {
+    public void setOwners(List<Owner> owners) {
         this.owners = owners;
+    }
+
+    public boolean isWriteAble(String userId) {
+        if (owners == null || owners.isEmpty() || StringUtils.isEmpty(userId)) return false;
+        for (Owner owner : owners) {
+            if (owner.getId().equals(userId))
+                return owner.isWritable();
+        }
+        return false;
+    }
+
+    public static class History {
+        @SerializedName("time")
+        private long time;
+        @SerializedName("message")
+        private String message;
+        @SerializedName("author")
+        private String author;
     }
 }

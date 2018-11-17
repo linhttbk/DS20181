@@ -186,8 +186,9 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
     @Subscribe
     public void onAppAction(AppAction appAction) {
         if (appAction == AppAction.ADD_RECORD) {
-            FileRecord record = appAction.getData(FileRecord.class);
-            adapter.addItem(record);
+//            FileRecord record = appAction.getData(FileRecord.class);
+//            adapter.addItem(record);
+            adapter.clear();
         }
     }
 
@@ -195,5 +196,8 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
     public void onDestroy() {
         super.onDestroy();
         if (compositeDisposable != null) compositeDisposable.dispose();
+    }
+    public List<FileRecord> getRecordAB(){
+        return adapter.getAll();
     }
 }

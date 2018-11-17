@@ -44,4 +44,14 @@ public class User {
         if (StringUtils.isEmpty(name)) return AppConstant.EMPTY;
         return name;
     }
+
+    private int per;
+
+    public int getPer() {
+        return per;
+    }
+
+    public void setPer(int per) {
+        this.per = per;
+    }
 }

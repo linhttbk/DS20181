@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rcvList"
         android:layout_width="match_parent"
@@ -45,5 +44,29 @@
     <!--android:layout_marginRight="@dimen/margin_large"-->
     <!--android:backgroundTint="@color/bg_float_button_red"-->
     <!--android:src="@drawable/ic_add_white" />-->
+    <RelativeLayout
+        android:id="@+id/rlRetry"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/tvEmpty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/empty_data" />
+
+        <Button
+android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvEmpty"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/margin_small"
+            android:background="@drawable/btn_selector"
+            android:text="@string/retry_lbl"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
 </RelativeLayout>

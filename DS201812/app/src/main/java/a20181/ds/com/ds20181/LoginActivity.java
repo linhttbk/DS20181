@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -20,6 +21,7 @@ import a20181.ds.com.ds20181.listeners.SignUpCallback;
 import a20181.ds.com.ds20181.models.BaseResponse;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
+import a20181.ds.com.ds20181.models.SignUpBody;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
 import butterknife.BindView;
@@ -184,16 +186,20 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
     }
 
     @Override
-    public void signUp(String username, String email, String password) {
+    public void signUp(String username, String name, String password) {
         layoutProgress.setVisibility(View.VISIBLE);
-        AppClient.getAPIService().signUp(username, email, password).enqueue(new Callback<BaseResponse>() {
+        String realPass = Base64.encodeToString(password.getBytes(), Base64.NO_WRAP);
+        SignUpBody body = new SignUpBody(new SignUpBody.UserBody(username, realPass, name));
+        AppClient.getAPIService().signUp(body).enqueue(new Callback<BaseResponse>() {
             @Override
             public void onResponse(Call<BaseResponse> call, Response<BaseResponse> response) {
                 layoutProgress.setVisibility(View.GONE);
                 try {
                     if (response.isSuccessful() && response.body() != null) {
-                        BaseResponse responses = response.body();
-                        Toast.makeText(LoginActivity.this, responses.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, "Đăng ký thành công, chuyển về trang đăng nhập!", Toast.LENGTH_SHORT).show();
+                            onBackPressed();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Tài khoản đã tồn tại", Toast.LENGTH_SHORT).show();
                     }
 
                 } catch (Exception ex) {
@@ -205,6 +211,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback, S
             @Override
             public void onFailure(Call<BaseResponse> call, Throwable t) {
                 layoutProgress.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

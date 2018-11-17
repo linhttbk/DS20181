@@ -2,6 +2,8 @@ package a20181.ds.com.ds20181;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -20,6 +22,7 @@ import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
 import a20181.ds.com.ds20181.fragments.RecordContentFragment;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
+import a20181.ds.com.ds20181.models.FileFilm;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,7 +63,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.container, RecordFileFragment.newInstance());
-        ft.addToBackStack(System.currentTimeMillis() + "");
+        ft.disallowAddToBackStack();
         ft.commit();
 //        showContentRecord();
     }
@@ -76,8 +79,8 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void showContentRecord(String id) {
-        switchFragment(RecordContentFragment.newInstance(id));
+    public void showContentRecord(FileFilm fileFilm) {
+        switchFragment(RecordContentFragment.newInstance(fileFilm));
     }
 
     @Override
@@ -137,14 +140,27 @@ public class MainActivity extends AppCompatActivity
         transaction.addToBackStack(System.currentTimeMillis() + "");
         transaction.commit();
     }
-    public void showAllIcon(boolean isShown){
-        showIcon(imgAdd,isShown);
-        showIcon(imgRedo,isShown);
-        showIcon(imgUndo,isShown);
+
+    public void switchFragmentNoAddBackStack(BaseFragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.container, fragment);
+        transaction.disallowAddToBackStack();
+        transaction.commit();
+    }
+
+    public void showAllIcon(boolean isShown) {
+        showIcon(imgAdd, isShown);
+        showIcon(imgRedo, isShown);
+        showIcon(imgUndo, isShown);
     }
 
     public void showIcon(ImageView icon, boolean isShown) {
         icon.setVisibility(isShown ? View.VISIBLE : View.GONE);
+    }
+
+    @OnClick(R.id.imgAdd)
+    public void onAddClick() {
+        bus.post(AppAction.ADD_CLICK);
     }
 
     @OnClick(R.id.imgUndo)

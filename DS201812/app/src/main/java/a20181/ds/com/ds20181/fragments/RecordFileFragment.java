@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -40,6 +41,8 @@ import retrofit2.Response;
 public class RecordFileFragment extends BaseFragment implements BaseRecyclerViewAdapter.ItemClickListener, AppConstant {
     @BindView(R.id.rcvList)
     RecyclerView recyclerView;
+    @BindView(R.id.rlRetry)
+    RelativeLayout rlRetry;
     FileFilmAdapter adapter;
     private List<FileFilm> mItems = new ArrayList<>();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -77,13 +80,14 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
     }
 
     private void initFileFilm() {
+        rlRetry.setVisibility(View.GONE);
         if (getActivity() != null)
             ((MainActivity) getActivity()).showLoading(true);
 
         User user = app.getCurrentUser();
         if (user == null) return;
         Log.e("initFileFilm: ", user.getUserId() + " xx" + app.getCurrentUser().getCookie());
-        Observable<List<FileFilm>> request1 = AppClient.getAPIService().getAllCreatorFile(app.getCurrentUser().getCookie(), user.getUserId());
+        final Observable<List<FileFilm>> request1 = AppClient.getAPIService().getAllCreatorFile(app.getCurrentUser().getCookie(), user.getUserId());
         Observable<List<FileFilm>> request2 = AppClient.getAPIService().getAllOwnerFile(app.getCurrentUser().getCookie(), user.getUserId());
         Observable<Object> objectObservable = Observable.zip(request1, request2, new BiFunction<List<FileFilm>, List<FileFilm>, Object>() {
 
@@ -116,7 +120,9 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                         if (getActivity() != null)
                             ((MainActivity) getActivity()).showLoading(false);
                         List<FileFilm> result = (ArrayList) o;
-                        adapter.set(result);
+                        if (result == null || result.isEmpty()) rlRetry.setVisibility(View.VISIBLE);
+                        else
+                            adapter.set(result);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -138,14 +144,18 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
         }
     }
 
+    @OnClick(R.id.btnRetry)
+    public void onRetryClick() {
+        initFileFilm();
+    }
+
     @Override
     public void onItemClick(View view, final int position) {
         final FileFilm film = adapter.getItem(position);
         if (film == null || film.isHeader() || app.getCurrentUser() == null) return;
         switch (view.getId()) {
             case R.id.root:
-                String id = film.getId();
-                ((MainActivity) getActivity()).showContentRecord(id);
+                ((MainActivity) getActivity()).showContentRecord(film);
                 break;
             case R.id.imgMore:
                 final PopupMenu popup = new PopupMenu(getContext(), view);
@@ -202,10 +212,10 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
                             if (response.code() == CODE_204) {
-                                Toast.makeText(getContext(),"Xóa thành công", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getContext(), "Xóa thành công", Toast.LENGTH_SHORT).show();
                                 adapter.removeItem(position);
-                            }else {
-                                Toast.makeText(getContext(),"Xóa thất bại", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Xóa thất bại", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

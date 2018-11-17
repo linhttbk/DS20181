@@ -2,9 +2,9 @@
     <string name="app_name">DS20181</string>
     <string name="btn_login">Đăng nhập</string>
     <string name="lbl_sign_up">Chưa có tài khoản? Đăng ký tại đây</string>
-    <string name="hint_user_name">Username</string>
-    <string name="hint_user_name_login">Type email or username</string>
-    <string name="hint_email"> Email</string>
+    <string name="hint_user_name">Tài khoản</string>
+    <string name="hint_user_name_login">Nhập tài khoản</string>
+    <string name="hint_name_user"> Tên</string>
     <string name="hint_password">Mật khẩu</string>
     <string name="btn_sign_up">Đăng ký</string>
     <string name="back_login_lbl">Trở về trang Đăng nhập</string>
@@ -24,4 +24,6 @@
     <string name="delete_file">Xóa</string>
     <string name="edit_file_lbl">Chỉnh sửa File</string>
     <string name="msg_login_fail">Tài khoản hoặc mật khẩu không chính xác</string>
+    <string name="empty_data">Không có dữ liệu</string>
+    <string name="retry_lbl">Thử lại</string>
 </resources>

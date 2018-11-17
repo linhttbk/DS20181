@@ -8,7 +8,7 @@ import io.socket.client.Socket;
 public interface AppConstant {
     boolean DEBUG = true;
     //String SOCKET_URL = "http://192.168.0.107:1232";
-   // String SOCKET_URL = "http://192.168.0.107:8000";
+    // String SOCKET_URL = "http://192.168.0.107:8000";
     String SOCKET_URL = "https://dfp-server.herokuapp.com";
     String BASE_URL = "https://dfp-server.herokuapp.com/api/";
     AppState app = AppState.getInstance();
@@ -27,8 +27,12 @@ public interface AppConstant {
     String EVENT_UN_FOCUS_RECORD = "un_focus_record";
     String EVENT_EDIT_RECORD = "edit_record";
 
-      String POPUP_CONSTANT = "mPopup";
-      String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
-      int REQUEST_READ_STORAGE = 112;
-      int FILE_REQUEST_CODE = 97;
+    String POPUP_CONSTANT = "mPopup";
+    String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
+    int REQUEST_READ_STORAGE = 112;
+    int FILE_REQUEST_CODE = 97;
+
+
+    int PERMISSION_READ = 1;
+    int PERMISSION_WRITE = 2;
 }
