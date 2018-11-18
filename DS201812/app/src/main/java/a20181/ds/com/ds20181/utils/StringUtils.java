@@ -53,6 +53,11 @@ public class StringUtils {
         return format.format(new Date(time));
     }
 
+    public static String getTodayTime(){
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        return format.format(new Date());
+    }
+
     public static boolean isEmpty(String src) {
         return src == null || src.equals("");
     }
