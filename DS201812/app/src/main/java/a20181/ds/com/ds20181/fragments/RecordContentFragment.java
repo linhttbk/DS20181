@@ -59,6 +59,9 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
 
     @BindView(R.id.rcv_content_recorded)
     RecyclerView rcvContent;
+    @BindView(R.id.btn_export)
+    Button btnExport;
+
 
     private RecordAdapter recordAdapter;
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -170,8 +173,17 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             recordAdapter = new RecordAdapter(getContext(), this);
             rcvContent.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvContent.setAdapter(recordAdapter);
+            setClickExport(recordAdapter.getAll());
         }
+    }
 
+    public void setClickExport(final List<FileRecord> fileRecords){
+        btnExport.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity) getActivity()).showExportFragment(fileRecords);
+            }
+        });
     }
 
     @Override

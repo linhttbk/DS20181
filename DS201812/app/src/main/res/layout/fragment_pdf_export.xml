@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/edt_film_name"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:hint="Tên phim"
+        android:textColorHint="@color/divider" />
+
+    <RadioGroup
+        android:id="@+id/rdg_template"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <RadioButton
+            android:id="@+id/radio_type_table"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:checked="false"
+            android:text="Table Template" />
+
+        <RadioButton
+            android:id="@+id/radio_type_line"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:checked="false"
+            android:text="Line Template" />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_export_pdf"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_weight="1"
+        android:background="@drawable/shape_button_printfile"
+        android:text="Xuất file" />
+
+
+</LinearLayout>

@@ -18,11 +18,16 @@ import android.widget.ImageView;
 
 import com.squareup.otto.Subscribe;
 
+import java.util.List;
+
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.customs.DisableTouchView;
+import a20181.ds.com.ds20181.fragments.ListFileFragment;
+import a20181.ds.com.ds20181.fragments.PdfExportFragment;
 import a20181.ds.com.ds20181.fragments.RecordContentFragment;
 import a20181.ds.com.ds20181.fragments.RecordFileFragment;
 import a20181.ds.com.ds20181.models.FileFilm;
+import a20181.ds.com.ds20181.models.FileRecord;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -65,7 +70,6 @@ public class MainActivity extends AppCompatActivity
         ft.replace(R.id.container, RecordFileFragment.newInstance());
         ft.disallowAddToBackStack();
         ft.commit();
-//        showContentRecord();
     }
 
 
@@ -81,6 +85,14 @@ public class MainActivity extends AppCompatActivity
 
     public void showContentRecord(FileFilm fileFilm) {
         switchFragment(RecordContentFragment.newInstance(fileFilm));
+    }
+
+    public void showListFile() {
+        switchFragment(ListFileFragment.newInstance());
+    }
+
+    public void showExportFragment(List<FileRecord> fileRecordList){
+        switchFragment(PdfExportFragment.newInstance(fileRecordList));
     }
 
     @Override
@@ -114,7 +126,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             // Handle the camera action
         } else if (id == R.id.nav_gallery) {
-
+            showListFile();
         } else if (id == R.id.nav_slideshow) {
 
         } else if (id == R.id.nav_manage) {
