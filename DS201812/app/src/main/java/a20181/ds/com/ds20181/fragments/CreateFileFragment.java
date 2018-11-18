@@ -120,7 +120,11 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
 
                     } else {
                         tagLayout.addTag(user.getName());
-                        shareList.add(user);
+                        User share = new User();
+                        share.setName(user.getName());
+                        share.setUserId(user.getUserId());
+                        share.setPer(user.getPer());
+                        shareList.add(share);
                     }
                     autoCompleteTextView.dismissDropDown();
 
@@ -142,7 +146,7 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
             @Override
             public void onTagCrossClick(int position) {
                 tagLayout.removeTag(position);
-                if (position > 0 && position < shareList.size()) {
+                if (position >= 0 && position < shareList.size()) {
                     shareList.remove(position);
                 }
             }
@@ -165,18 +169,21 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
         List<Owner> shares = new ArrayList<>();
         if (!ListUtil.isEmpty(shareList)) {
             for (User user : shareList) {
-                Log.e( "addFile: ",user.getUserId() );
+                Log.e("addFile: ", user.getUserId());
                 boolean contain = false;
                 for (int i = 0; i < shares.size(); i++) {
                     Owner owner = shares.get(i);
-                    Log.e( "addFile: ", owner.getId() );
+                    Log.e("addFile: ", owner.getId());
                     if (owner.getId().equals(user.getUserId())) {
-                        Log.e( "addFile: ","True" );
+                        Log.e("addFile: ", "True");
                         contain = true;
                         break;
                     }
                 }
-                if (!contain) shares.add(new Owner(user.getUserId(), user.getPer()));
+                if (!contain) {
+                    shares.add(new Owner(user.getUserId(), user.getPer()));
+                    Log.e( "addFile"," Per =  " + user.getPer()  );
+                }
 
             }
 

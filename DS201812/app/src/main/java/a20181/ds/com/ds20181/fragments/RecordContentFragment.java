@@ -156,9 +156,48 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     Emitter.Listener importRecord = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            JSONArray array = (JSONArray)args[0];
-           // JSONObject data = (JSONObject) args[0];
-            Log.e( "call: ", array.toString());
+            try {
+                JSONArray array = (JSONArray) args[0];
+                if (array != null) {
+                    final List<FileRecord> results = new ArrayList<>();
+                    int size = array.length();
+                    for (int i = 0; i < size; i++) {
+
+                        JSONObject data = array.getJSONObject(i);
+                        FileRecord record = new FileRecord();
+                        record.setId(data.getString("_id"));
+                        record.setSpeaker(data.getString("speaker"));
+                        record.setContent(data.getString("content"));
+                        record.setTime(data.getInt("time"));
+                        record.setCallBack(RecordContentFragment.this);
+
+                        final JSONArray activeArray = data.getJSONArray("userOn");
+                        List<User> userOns = new ArrayList<>();
+                        if (activeArray != null) {
+                            for (int j = 0; j < activeArray.length(); i++) {
+                                JSONObject active = activeArray.getJSONObject(i);
+                                User user = new User();
+                                user.setUserId(active.getString("id"));
+                                user.setName(active.getString("name"));
+                                userOns.add(user);
+                            }
+                        }
+                        record.setUserActives(userOns);
+                        results.add(record);
+
+                    }
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                recordAdapter.add(results);
+                            }
+                        });
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -187,7 +226,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         }
     }
 
-    public void setClickExport(final List<FileRecord> fileRecords){
+    public void setClickExport(final List<FileRecord> fileRecords) {
         btnExport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -343,6 +382,11 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
+            }
+        });
+        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialogInterface) {
                 JSONObject jsonObject = new JSONObject();
                 try {
                     jsonObject.put("userId", app.getCurrentUser().getUserId());
@@ -352,10 +396,8 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
             }
         });
-
         edtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         edtSecond.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         dialog.show();

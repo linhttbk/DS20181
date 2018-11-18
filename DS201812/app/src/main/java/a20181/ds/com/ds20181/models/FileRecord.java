@@ -21,7 +21,7 @@ public class FileRecord implements Command {
     private int time;
 
     private CommandCallBack callBack;
-   // @SerializedName("userOn")
+    @SerializedName("userOn")
     private List<User> userActives = new ArrayList<>();
 
     public String getId() {
@@ -84,13 +84,12 @@ public class FileRecord implements Command {
     }
 
     public void deleteUserActive(User user) {
-//        for (int i = 0; i < userActives.size(); i++){
-//            if (userActives.get(i).equals(userName)){
-//                userActives.remove(i);
-//                break;
-//            }
-//        }
-        userActives.remove(user);
+        for (int i = 0; i < userActives.size(); i++){
+            if (userActives.get(i).getName().equals(user.getName())){
+                userActives.remove(i);
+                break;
+            }
+        }
     }
 
     @Override

@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import a20181.ds.com.ds20181.AppConstant;
 import a20181.ds.com.ds20181.R;
 import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.models.User;
@@ -23,7 +24,7 @@ import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
+public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> implements AppConstant {
 
     public RecordAdapter(@NonNull Context context, ItemClickListener itemClickListener) {
         super(context, itemClickListener);
@@ -48,14 +49,11 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
             Log.d("asdfasdf", "onBindViewHolder: " + activeUserIds.size());
             StringBuilder builder = new StringBuilder();
             for (int i = 0; i < activeUserIds.size(); i++) {
-
                 String s = activeUserIds.get(i).getName();
-                if (s.equals(activeUserIds.get(activeUserIds.size() - 1).getName())) {
-                    builder.append(s);
-                    break;
-                }
+                if (s.equals(app.getCurrentUser().getUserId())) continue;
                 builder.append(s);
-                builder.append(",");
+                if (i != activeUserIds.size() - 1)
+                    builder.append(",");
             }
 
             ((ViewHolder) holder).tvActiveUsers.setText(builder.toString());
@@ -71,6 +69,21 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
                 mItemClickListener.onItemClick(holder.itemView.getRootView(), position);
             }
         });
+    }
+
+    @Override
+    public void add(List<FileRecord> itemList) {
+        if (mDataList == null) mDataList = new ArrayList<>();
+        mDataList.addAll(itemList);
+        Collections.sort(mDataList, new Comparator<FileRecord>() {
+            @Override
+            public int compare(FileRecord record, FileRecord t1) {
+                if (record.getTime() == t1.getTime()) return 0;
+                if (record.getTime() > t1.getTime()) return 1;
+                return -1;
+            }
+        });
+        notifyDataSetChanged();
     }
 
     @Override
@@ -114,7 +127,15 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> {
 
     @Override
     public void update(int position, FileRecord record) {
-        super.update(position, record);
+        if (position < 0 || mDataList == null || position >= mDataList.size() || record == null) return;
+        for (int i = 0; i < mDataList.size(); i++) {
+            FileRecord item = mDataList.get(i);
+            if (item.getId().equals(record.getId())) {
+                mDataList.set(i, record);
+                break;
+            }
+        }
+        notifyItemChanged(position);
         if (mDataList.size() > 0) {
             Collections.sort(mDataList, new Comparator<FileRecord>() {
                 @Override
