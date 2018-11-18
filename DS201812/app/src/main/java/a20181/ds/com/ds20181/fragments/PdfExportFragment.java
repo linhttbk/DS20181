@@ -17,8 +17,10 @@ import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.GrayColor;
+import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
@@ -192,6 +194,7 @@ public class PdfExportFragment extends BaseFragment {
             document.add(new Paragraph(""));
 
             //Content file
+            Font contentFont = new Font(font, 14.0f, Font.NORMAL, BaseColor.BLACK);
             switch (templateType) {
                 //table
                 case 0:
@@ -201,16 +204,15 @@ public class PdfExportFragment extends BaseFragment {
                     table.getDefaultCell().setUseAscender(true);
                     table.getDefaultCell().setUseDescender(true);
 
+                    table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
+                    table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                     table.addCell("Time");
                     table.addCell("Speaker");
                     table.addCell("Content");
-
-                    table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
-                    table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
                     for (FileRecord record : recordList) {
-                        table.addCell(StringUtils.timeConversion(record.getTime()));
-                        table.addCell(record.getSpeaker());
-                        table.addCell(record.getContent());
+                        table.addCell(getNormalCell(StringUtils.timeConversion(record.getTime()),contentFont));
+                        table.addCell(getNormalCell(record.getSpeaker(),contentFont));
+                        table.addCell(getNormalCell(record.getContent(),contentFont));
                     }
                     document.add(table);
                     break;
@@ -242,6 +244,12 @@ public class PdfExportFragment extends BaseFragment {
             }
             e.printStackTrace();
         }
+    }
+
+    public static PdfPCell getNormalCell(String string, Font font){
+        PdfPCell cell = new PdfPCell(new Phrase(string, font));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        return cell;
     }
 
 }
