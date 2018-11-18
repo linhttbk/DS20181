@@ -48,7 +48,7 @@ public class FileFilm {
     private String name;
     @SerializedName("creator")
     private String creator;
-    @SerializedName("creatAt")
+    @SerializedName("createAt")
     private long createAt;
     @SerializedName("owners")
     private List<Owner> owners;

@@ -3,19 +3,12 @@ package a20181.ds.com.ds20181.fragments;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,10 +165,13 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
         List<Owner> shares = new ArrayList<>();
         if (!ListUtil.isEmpty(shareList)) {
             for (User user : shareList) {
+                Log.e( "addFile: ",user.getUserId() );
                 boolean contain = false;
                 for (int i = 0; i < shares.size(); i++) {
                     Owner owner = shares.get(i);
+                    Log.e( "addFile: ", owner.getId() );
                     if (owner.getId().equals(user.getUserId())) {
+                        Log.e( "addFile: ","True" );
                         contain = true;
                         break;
                     }
@@ -188,7 +184,7 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
         }
         BodyFilePost fileResponse = new BodyFilePost();
         fileResponse.setName(nameFile);
-        fileResponse.setCreatAt(System.currentTimeMillis());
+        fileResponse.setCreateAt(System.currentTimeMillis());
         fileResponse.setOwners(shares);
         Disposable disposable = AppClient.getAPIService().createFile(app.getCookie(), fileResponse)
                 .subscribeOn(Schedulers.io())
