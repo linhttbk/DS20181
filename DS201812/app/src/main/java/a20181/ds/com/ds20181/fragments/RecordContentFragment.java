@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.google.gson.JsonObject;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,10 +72,11 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         @Override
         public void call(Object... args) {
             try {
-                final JSONObject data = new JSONObject(args[0].toString());
+                //  final JSONObject data = new JSONObject(args[0].toString());
+                final JSONObject data = (JSONObject) args[0];
                 final String userActiveId = data.getString("userId");
                 final String recordId = data.getString("recordId");
-                final String userName = data.getString("userName");
+                final String userName = data.getString("name");
                 if (userActiveId.equals(userId)) return;
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
@@ -95,10 +97,11 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         @Override
         public void call(Object... args) {
             try {
-                final JSONObject data = new JSONObject(args[0].toString());
+                //   final JSONObject data = new JSONObject(args[0].toString());
+                final JSONObject data = (JSONObject) args[0];
                 final String userActiveId = data.getString("userId");
                 final String recordId = data.getString("recordId");
-                final String userName = data.getString("userName");
+                final String userName = data.getString("name");
                 if (userActiveId.equals(userId)) return;
                 if (getActivity() != null)
                     getActivity().runOnUiThread(new Runnable() {
@@ -119,10 +122,9 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     Emitter.Listener editRecord = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            Log.e("call: ", args.toString());
             try {
-                Log.e("call: ", args.toString());
-                final JSONObject data = new JSONObject(args[0].toString());
+                // final JSONObject data = new JSONObject(args[0].toString());
+                final JSONObject data = (JSONObject) args[0];
                 final String userActiveId = data.getString("userId");
                 final JSONObject record = data.getJSONObject("record");
                 final String recordId = record.getString("_id");
@@ -146,6 +148,14 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
+    };
+    Emitter.Listener importRecord = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            JSONArray array = (JSONArray)args[0];
+           // JSONObject data = (JSONObject) args[0];
+            Log.e( "call: ", array.toString());
         }
     };
 
@@ -188,6 +198,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         getSocket().on(EVENT_CLICK_RECORD, clickRecord);
         getSocket().on(EVENT_UN_FOCUS_RECORD, unFocusRecord);
         getSocket().on(EVENT_EDIT_RECORD, editRecord);
+        getSocket().on(EVENT_IMPORT_RECORD, importRecord);
 
     }
 
@@ -252,13 +263,12 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 try {
                     jsonObject.put("userId", app.getCurrentUser().getUserId());
                     jsonObject.put("recordId", fileRecord.getId());
-                    jsonObject.put("userName", app.getCurrentUser().getName());
+                    jsonObject.put("name", app.getCurrentUser().getName());
                     getSocket().emit(EVENT_CLICK_RECORD, jsonObject);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 showDialogUpdateRecord(fileRecord, position);
-                Log.d("asdfasdf", "onItemClick: " + jsonObject.toString());
             }
         }
     }
@@ -321,11 +331,16 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             @Override
             public void onClick(View view) {
                 dialog.dismiss();
-                JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("userId", app.getCurrentUser().getUserId());
-                jsonObject.addProperty("recordId", record.getId());
-                jsonObject.addProperty("userName", app.getCurrentUser().getName());
-                getSocket().emit(EVENT_UN_FOCUS_RECORD, jsonObject);
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("userId", app.getCurrentUser().getUserId());
+                    jsonObject.put("recordId", record.getId());
+                    jsonObject.put("name", app.getCurrentUser().getName());
+                    getSocket().emit(EVENT_UN_FOCUS_RECORD, jsonObject);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
 

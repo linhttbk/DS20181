@@ -26,6 +26,7 @@ public interface AppConstant {
     String EVENT_CLICK_RECORD = "click_record";
     String EVENT_UN_FOCUS_RECORD = "un_focus_record";
     String EVENT_EDIT_RECORD = "edit_record";
+    String EVENT_IMPORT_RECORD = "create_many_record";
 
     String POPUP_CONSTANT = "mPopup";
     String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
