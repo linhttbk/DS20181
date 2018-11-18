@@ -5,25 +5,31 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class CreateRecordBody {
-    @SerializedName("data1")
-    private List<DataAB> data1;
-    @SerializedName("data2")
-    private List<DataBC> data2;
+    @SerializedName("dataArray1")
+    private List<DataAB> dataArray1;
+    @SerializedName("dataArray2")
+    private List<DataBC> dataArray2;
+    @SerializedName("time")
+    private long time;
 
     public  List<DataAB> getData1() {
-        return data1;
+        return dataArray1;
     }
 
     public void setData1( List<DataAB> data1) {
-        this.data1 = data1;
+        this.dataArray1 = data1;
     }
 
     public List<DataBC> getData2() {
-        return data2;
+        return dataArray2;
     }
 
     public void setData2( List<DataBC> data2) {
-        this.data2 = data2;
+        this.dataArray2 = data2;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
     }
 
     public static class DataAB {

@@ -78,6 +78,10 @@ public interface APIService {
     Observable<FileRecord> addRecord(@Header("Cookie") String cookie, @Path("fileID") String fileId, @Body CreateRecordBody recordBody);
 
     @Headers({"Content-Type: application/json"})
+    @POST("record/list-data/{fileID}")
+    Observable<List<FileRecord>> importRecord(@Header("Cookie") String cookie, @Path("fileID") String fileId, @Body CreateRecordBody recordBody);
+
+    @Headers({"Content-Type: application/json"})
     @PUT("record/{id}")
     Observable<FileRecord> updateRecord(@Header("Cookie") String cookie, @Path("id") String recordId, @Body UpdateRecordBody recordBody);
 

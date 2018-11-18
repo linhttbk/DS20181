@@ -243,7 +243,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         if (user == null) {
             return;
         }
-        if (!fileFilm.isCreator(user.getUserId()) || !fileFilm.isWriteAble(user.getUserId())) {
+        if (!fileFilm.isCreator(user.getUserId()) && !fileFilm.isWriteAble(user.getUserId())) {
             showDialogPermission();
         } else {
             FileRecord fileRecord = recordAdapter.getItem(position);

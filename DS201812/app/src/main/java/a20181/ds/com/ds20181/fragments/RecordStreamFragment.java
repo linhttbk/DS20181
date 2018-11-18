@@ -64,20 +64,17 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
         super.initView(view);
         ButterKnife.bind(this, view);
         view.setFocusableInTouchMode(true);
-       view.requestFocus();
-       view.setOnKeyListener( new View.OnKeyListener()
-        {
+        view.requestFocus();
+        view.setOnKeyListener(new View.OnKeyListener() {
             @Override
-            public boolean onKey( View v, int keyCode, KeyEvent event )
-            {
-                if( keyCode == KeyEvent.KEYCODE_BACK )
-                {
-                    if(getActivity()!=null) getActivity().onBackPressed();
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_BACK) {
+                    if (getActivity() != null) getActivity().onBackPressed();
                     return true;
                 }
                 return false;
             }
-        } );
+        });
     }
 
     @Override
@@ -159,16 +156,16 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
         if (getActivity() != null) {
             ((MainActivity) getActivity()).showLoading(true);
         }
-        Disposable disposable = AppClient.getAPIService().addRecord(app.getCookie(), idFile, createRecordBody)
+        Disposable disposable = AppClient.getAPIService().importRecord(app.getCookie(), idFile, createRecordBody)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<FileRecord>() {
+                .subscribe(new Consumer<List<FileRecord>>() {
                     @Override
-                    public void accept(FileRecord fileRecord) throws Exception {
+                    public void accept(List<FileRecord> list) throws Exception {
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
                         }
-                        Log.e("accept: ", fileRecord.getId());
+                        Log.e("accept: ", list.size()+" ");
                         bus.post(AppAction.ADD_RECORD);
                         showDialog();
 
@@ -231,9 +228,9 @@ public class RecordStreamFragment extends BaseFragment implements AppConstant {
                     dataBC.setTime(fileRecord.getTime());
                     data2.add(dataBC);
                 }
-
                 createRecordBody.setData1(data1);
                 createRecordBody.setData2(data2);
+                createRecordBody.setTime(System.currentTimeMillis());
                 createRecord(createRecordBody);
 
             } else {
