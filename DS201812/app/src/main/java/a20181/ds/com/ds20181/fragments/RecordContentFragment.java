@@ -128,7 +128,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             try {
                 // final JSONObject data = new JSONObject(args[0].toString());
                 final JSONObject data = (JSONObject) args[0];
-                final String userActiveId = data.getString("userId");
+                JSONObject user = data.getJSONObject("user");
+                final String userActiveId = user.getString("_id");
+                final String userName = user.getString("name");
+
                 final JSONObject record = data.getJSONObject("record");
                 final String recordId = record.getString("_id");
                 final String content = record.getString("content");
