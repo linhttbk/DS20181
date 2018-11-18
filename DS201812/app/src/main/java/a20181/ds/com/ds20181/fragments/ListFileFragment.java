@@ -1,24 +1,17 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 
 import com.github.barteksc.pdfviewer.PDFView;
-import com.github.barteksc.pdfviewer.util.FitPolicy;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -91,9 +84,6 @@ public class ListFileFragment extends BaseFragment implements FilesAdapter.ItemC
         dialog.getWindow().setLayout((int) (getResources().getDisplayMetrics().widthPixels * 0.9),
                 (int) (getResources().getDisplayMetrics().heightPixels * 0.8));
         PDFView pdfView = dialog.findViewById(R.id.pdf_view);
-
-        Log.d("asdfsadf", "showFile: " + path);
-
         if (StringUtils.isEmpty(filePath)){
             return;
         }

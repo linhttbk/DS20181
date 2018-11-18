@@ -81,10 +81,6 @@ public class PdfExportFragment extends BaseFragment {
         super.initData();
     }
 
-    public void onRadioButtonClicked() {
-        // Is the button now checked?
-
-    }
 
     public void handleClickEvent() {
         rdgTemplate.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
