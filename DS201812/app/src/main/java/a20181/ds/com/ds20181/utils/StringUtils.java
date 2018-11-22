@@ -1,5 +1,7 @@
 package a20181.ds.com.ds20181.utils;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.regex.Matcher;
@@ -48,17 +50,51 @@ public class StringUtils {
         return hour * 3600 + min * 60 + sec;
     }
 
+    public static long convertStringToLong(String source) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        Date date = null;
+        try {
+            date = formatter.parse(source);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (date == null) return 0;
+        long mills = date.getTime();
+        return mills;
+    }
+
     public static String formatLongToDate(long time) {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return format.format(new Date(time));
     }
 
-    public static String getTodayTime(){
+    public static String convertLongToDate(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        return format.format(new Date(time));
+    }
+
+    public static String formatLong2Date(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
+        return format.format(new Date(time));
+    }
+
+    public static String getTodayTime() {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         return format.format(new Date());
     }
 
     public static boolean isEmpty(String src) {
         return src == null || src.equals("");
+    }
+
+    public static boolean isDateValid(String source) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        try {
+            formatter.parse(source);
+            return true;
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

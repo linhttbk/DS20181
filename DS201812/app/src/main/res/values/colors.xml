@@ -18,4 +18,6 @@
     <color name="blue_semi_transparent">#805677fc</color>
     <color name="blue_semi_transparent_pressed">#80738ffe</color>
     <color name="bg_divider_red">#e7ff0008</color>
+    <color name="text_second">#292626</color>
+    <color name="color_selector_gray">#c9c9c9</color>
 </resources>

@@ -20,11 +20,11 @@ public class UpdateRecordBody {
         @SerializedName("speaker")
         private String speaker;
         @SerializedName("time")
-        private int time;
+        private long time;
         @SerializedName("content")
         private String content;
 
-        public Options(String fileID, String speaker, int time, String content) {
+        public Options(String fileID, String speaker, long time, String content) {
             this.fileID = fileID;
             this.speaker = speaker;
             this.time = time;

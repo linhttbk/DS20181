@@ -9,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import a20181.ds.com.ds20181.R;
+import a20181.ds.com.ds20181.models.CreateRecordBody.*;
 import a20181.ds.com.ds20181.models.FileRecord;
 import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ContentStreamABAdapter extends BaseRecyclerViewAdapter<FileRecord> {
+public class ContentStreamABAdapter extends BaseRecyclerViewAdapter<DataAB> {
 
     public ContentStreamABAdapter(@NonNull Context context, ItemClickListener itemClickListener) {
         super(context, itemClickListener);
@@ -30,7 +31,7 @@ public class ContentStreamABAdapter extends BaseRecyclerViewAdapter<FileRecord> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).tvTime.setText(StringUtils.timeConversion(getItem(position).getTime()));
+            ((ViewHolder) holder).tvTime.setText(StringUtils.formatLong2Date(getItem(position).getTime()));
             ((ViewHolder) holder).tvContent.setText(getItem(position).getSpeaker());
         }
     }

@@ -1,5 +1,6 @@
 package a20181.ds.com.ds20181.adapters;
 
+import a20181.ds.com.ds20181.models.CreateRecordBody.*;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +15,7 @@ import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ContentStreamBCAdapter extends BaseRecyclerViewAdapter<FileRecord> {
+public class ContentStreamBCAdapter extends BaseRecyclerViewAdapter<DataBC> {
 
     public ContentStreamBCAdapter(@NonNull Context context, ItemClickListener itemClickListener) {
         super(context, itemClickListener);
@@ -30,7 +31,7 @@ public class ContentStreamBCAdapter extends BaseRecyclerViewAdapter<FileRecord> 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).tvTime.setText(StringUtils.timeConversion(getItem(position).getTime()));
+            ((ViewHolder) holder).tvTime.setText(StringUtils.formatLong2Date(getItem(position).getTime()));
             ((ViewHolder) holder).tvContent.setText(getItem(position).getContent());
         }
     }

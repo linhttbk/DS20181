@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         switchFragment(ListFileFragment.newInstance());
     }
 
-    public void showExportFragment(List<FileRecord> fileRecordList){
+    public void showExportFragment(List<FileRecord> fileRecordList) {
         switchFragment(PdfExportFragment.newInstance(fileRecordList));
     }
 
@@ -121,11 +121,17 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (item.isChecked()) {
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+            return true;
+        }
+        int id = item.getItemId();
+        if (id == R.id.nav_home) {
+            switchFragment(RecordFileFragment.newInstance());
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_pdf) {
             showListFile();
         } else if (id == R.id.nav_slideshow) {
 

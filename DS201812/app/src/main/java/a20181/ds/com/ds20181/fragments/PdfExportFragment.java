@@ -55,7 +55,7 @@ public class PdfExportFragment extends BaseFragment {
     Button btnExport;
 
     private String filmName = EMPTY;
-    private int templateType = -1;
+    private int templateType = 0;
     private List<FileRecord> fileRecords;
 
     public static PdfExportFragment newInstance(List<FileRecord> fileRecords) {
@@ -167,10 +167,18 @@ public class PdfExportFragment extends BaseFragment {
             Font headerFont = new Font(font, 18.0f, Font.NORMAL, BaseColor.BLACK);
 
             //Creating Chunk
-            Chunk headerChunk = new Chunk("TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI", headerFont);
+            Chunk headerChunk = new Chunk("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", headerFont);
             Paragraph paragraph = new Paragraph(headerChunk);
             paragraph.setAlignment(Element.ALIGN_CENTER);
             document.add(paragraph);
+
+            //Creating Chunk
+            Font headerFont2 = new Font(font, 16.0f, Font.NORMAL, BaseColor.BLACK);
+            Chunk headerChunk2 = new Chunk("Độc lập - Tự do - Hạnh Phúc", headerFont2);
+            Paragraph paragraph2 = new Paragraph(headerChunk2);
+            paragraph2.setAlignment(Element.ALIGN_CENTER);
+            document.add(paragraph2);
+
 
             //Line seperator
             LineSeparator lineSeparator = new LineSeparator();
@@ -180,9 +188,16 @@ public class PdfExportFragment extends BaseFragment {
             document.add(new Chunk(lineSeparator));
             document.add(new Paragraph(""));
 
+            //Header title
+            Font headerFont3 = new Font(font, 16.0f, Font.NORMAL, BaseColor.BLACK);
+            Chunk title3 = new Chunk("BIÊN BẢN CUỘC HỌP", headerFont3);
+            Paragraph titleParagraph3 = new Paragraph(title3);
+            titleParagraph3.setAlignment(Element.ALIGN_CENTER);
+            document.add(titleParagraph3);
+
             //title
-            Font titleFont = new Font(font,16.0f, Font.NORMAL, BaseColor.BLACK);
-            Chunk title = new Chunk(filmName,titleFont);
+            Font titleFont = new Font(font, 16.0f, Font.NORMAL, BaseColor.BLACK);
+            Chunk title = new Chunk(filmName, titleFont);
             Paragraph titleParagraph = new Paragraph(title);
             titleParagraph.setAlignment(Element.ALIGN_CENTER);
             document.add(titleParagraph);
@@ -198,9 +213,9 @@ public class PdfExportFragment extends BaseFragment {
             switch (templateType) {
                 //table
                 case 0:
-                    float[] columnWidths = {1, 5, 5};
+                    float[] columnWidths = {3, 2, 5};
                     PdfPTable table = new PdfPTable(columnWidths);
-                    table.setWidthPercentage(80);
+                    table.setWidthPercentage(100);
                     table.getDefaultCell().setUseAscender(true);
                     table.getDefaultCell().setUseDescender(true);
 
@@ -210,9 +225,9 @@ public class PdfExportFragment extends BaseFragment {
                     table.addCell("Speaker");
                     table.addCell("Content");
                     for (FileRecord record : recordList) {
-                        table.addCell(getNormalCell(StringUtils.timeConversion(record.getTime()),contentFont));
-                        table.addCell(getNormalCell(record.getSpeaker(),contentFont));
-                        table.addCell(getNormalCell(record.getContent(),contentFont));
+                        table.addCell(getNormalCell(StringUtils.formatLongToDate(record.getTime()), contentFont));
+                        table.addCell(getNormalCell(record.getSpeaker(), contentFont));
+                        table.addCell(getNormalCell(record.getContent(), contentFont));
                     }
                     document.add(table);
                     break;
@@ -220,7 +235,7 @@ public class PdfExportFragment extends BaseFragment {
                 // line
                 case 1:
                     for (FileRecord record : recordList) {
-                        Chunk chunk = new Chunk(StringUtils.timeConversion(record.getTime()) + " " +
+                        Chunk chunk = new Chunk(StringUtils.formatLongToDate(record.getTime()) + " " +
                                 record.getSpeaker() + ": " + record.getContent(), headerFont);
 
                         //Creating Paragraph to add...
@@ -238,15 +253,15 @@ public class PdfExportFragment extends BaseFragment {
 
             document.close();
 
-        } catch (IOException|DocumentException e) {
-            if (document.isOpen()){
+        } catch (IOException | DocumentException e) {
+            if (document.isOpen()) {
                 document.close();
             }
             e.printStackTrace();
         }
     }
 
-    public static PdfPCell getNormalCell(String string, Font font){
+    public static PdfPCell getNormalCell(String string, Font font) {
         PdfPCell cell = new PdfPCell(new Phrase(string, font));
         cell.setHorizontalAlignment(Element.ALIGN_CENTER);
         return cell;

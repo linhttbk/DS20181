@@ -1,14 +1,19 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.lang.reflect.Field;
@@ -24,8 +29,10 @@ import a20181.ds.com.ds20181.adapters.FileFilmAdapter;
 import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.models.BaseResponse;
 import a20181.ds.com.ds20181.models.FileFilm;
+import a20181.ds.com.ds20181.models.Owner;
 import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
+import a20181.ds.com.ds20181.utils.StringUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -188,6 +195,10 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                                 popup.dismiss();
                                 deleteFile(film.getId(), position);
                                 break;
+                            case R.id.info_file:
+                                popup.dismiss();
+                                showDialogInfor(film);
+                                break;
                         }
                         return false;
                     }
@@ -195,6 +206,36 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
 
                 break;
         }
+
+    }
+
+    private void showDialogInfor(FileFilm fileFilm) {
+        final Dialog dialog = new Dialog(getContext());
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.dialog_file_infor);
+        dialog.setCanceledOnTouchOutside(true);
+        List<Owner> owners = fileFilm.getOwners();
+        int countWrite = 0;
+        int countRead = 0;
+        if (owners != null) {
+            for (Owner owner : owners) {
+                if (owner.isWritable()) countWrite++;
+                else countRead++;
+            }
+        }
+        ((TextView) dialog.findViewById(R.id.tvTitle)).setText(fileFilm.getName());
+        ((TextView) dialog.findViewById(R.id.tvCreate)).setText(StringUtils.formatLongToDate(fileFilm.getCreateAt()));
+        ((TextView) dialog.findViewById(R.id.tvCountShare)).setText(countRead + countWrite + EMPTY);
+        ((TextView) dialog.findViewById(R.id.tvPer)).setText(getString((R.string.per_count), countRead, countWrite));
+        ((TextView) dialog.findViewById(R.id.tvDesc)).setText(StringUtils.isEmpty(fileFilm.getDescription()) ? fileFilm.getDescription() : getString(R.string.text_empty_desc));
+        ((TextView) dialog.findViewById(R.id.tvDone)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
 
     }
 

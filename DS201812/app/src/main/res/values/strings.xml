@@ -26,4 +26,8 @@
     <string name="msg_login_fail">Tài khoản hoặc mật khẩu không chính xác</string>
     <string name="empty_data">Không có dữ liệu</string>
     <string name="retry_lbl">Thử lại</string>
+    <string name="text_empty_desc">Không có</string>
+    <string name="per_count">Quyền đọc: %d, Quyền chỉnh sửa: %d</string>
+    <string name="file_infor_item">Chi tiết</string>
+    <string name="time_invalid">Thời gian không hợp lệ</string>
 </resources>

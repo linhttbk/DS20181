@@ -1,16 +1,21 @@
 package a20181.ds.com.ds20181.fragments;
 
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import a20181.ds.com.ds20181.AppAction;
@@ -50,6 +55,11 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
     CompositeDisposable compositeDisposable = new CompositeDisposable();
     @BindView(R.id.btnDone)
     Button btn_done;
+    @BindView(R.id.edtDate)
+    EditText edtDate;
+    private long timeSelected = 0;
+    @BindView(R.id.edtDesc)
+    EditText edtDesc;
 
     public static CreateFileFragment newInstance() {
         Bundle args = new Bundle();
@@ -154,15 +164,55 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
 
     }
 
+    @OnClick(R.id.imgDate)
+    public void onClickDate() {
+        showDialogDate();
+    }
+
+    private void showDialogDate() {
+        final View dialogView = View.inflate(getContext(), R.layout.dialog_date_meeting, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+
+        dialogView.findViewById(R.id.date_time_set).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                DatePicker datePicker = (DatePicker) dialogView.findViewById(R.id.date_picker);
+
+                Calendar calendar = new GregorianCalendar(datePicker.getYear(),
+                        datePicker.getMonth(),
+                        datePicker.getDayOfMonth());
+
+                timeSelected = calendar.getTimeInMillis();
+                String dateDisplay = StringUtils.convertLongToDate(timeSelected);
+                edtDate.setText(dateDisplay);
+                alertDialog.dismiss();
+            }
+        });
+        dialogView.findViewById(R.id.btn_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialog.dismiss();
+            }
+        });
+        alertDialog.setView(dialogView);
+        alertDialog.show();
+    }
 
     @OnClick(R.id.btnAddFile)
     public void addFile() {
         User currentUser = app.getCurrentUser();
         if (currentUser == null) return;
         String nameFile = edtNameFile.getText().toString();
+        String desc = edtDesc.getText().toString();
+
 
         if (StringUtils.isEmpty(nameFile)) {
             Toast.makeText(getContext(), "Bạn chưa nhập tên File", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (timeSelected == 0) {
+            Toast.makeText(getContext(), "Bạn chưa chọn thời gian ", Toast.LENGTH_SHORT).show();
             return;
         }
         ((MainActivity) getActivity()).showLoading(true);
@@ -182,7 +232,7 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
                 }
                 if (!contain) {
                     shares.add(new Owner(user.getUserId(), user.getPer()));
-                    Log.e( "addFile"," Per =  " + user.getPer()  );
+                    Log.e("addFile", " Per =  " + user.getPer());
                 }
 
             }
@@ -193,6 +243,8 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
         fileResponse.setName(nameFile);
         fileResponse.setCreateAt(System.currentTimeMillis());
         fileResponse.setOwners(shares);
+        fileResponse.setDate(timeSelected);
+        fileResponse.setDescription(desc);
         Disposable disposable = AppClient.getAPIService().createFile(app.getCookie(), fileResponse)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -202,7 +254,8 @@ public class CreateFileFragment extends BaseFragment implements AppConstant {
                         Log.e("accept: ", fileFilm.getId());
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
-                            ((MainActivity) getActivity()).switchFragment(RecordStreamFragment.newInstance(fileFilm.getId()));
+                            Toast.makeText(getActivity(), "Tạo file thành công", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
                         }
                     }
                 }, new Consumer<Throwable>() {

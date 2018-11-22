@@ -12,6 +12,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.InputFilter;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -60,8 +63,6 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
 
     @BindView(R.id.rcv_content_recorded)
     RecyclerView rcvContent;
-    @BindView(R.id.btn_export)
-    Button btnExport;
 
 
     private RecordAdapter recordAdapter;
@@ -136,7 +137,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 final String recordId = record.getString("_id");
                 final String content = record.getString("content");
                 final String spealker = record.getString("speaker");
-                final int time = record.getInt("time");
+                final long time = record.getLong("time");
                 if (userActiveId.equals(userId)) return;
                 if (getActivity() != null)
                     getActivity().runOnUiThread(new Runnable() {
@@ -171,7 +172,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                         record.setId(data.getString("_id"));
                         record.setSpeaker(data.getString("speaker"));
                         record.setContent(data.getString("content"));
-                        record.setTime(data.getInt("time"));
+                        record.setTime(data.getLong("time"));
                         record.setCallBack(RecordContentFragment.this);
 
                         final JSONArray activeArray = data.getJSONArray("userOn");
@@ -225,17 +226,38 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             recordAdapter = new RecordAdapter(getContext(), this);
             rcvContent.setLayoutManager(new LinearLayoutManager(getContext()));
             rcvContent.setAdapter(recordAdapter);
-            setClickExport(recordAdapter.getAll());
         }
     }
 
-    public void setClickExport(final List<FileRecord> fileRecords) {
-        btnExport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
+    private void exportPDF() {
+        if (recordAdapter == null) return;
+        List<FileRecord> fileRecords = recordAdapter.getAll();
+        if (fileRecords.isEmpty()) {
+            Toast.makeText(getContext(), "File đang trống", Toast.LENGTH_SHORT).show();
+        } else {
+            if (getActivity() != null)
                 ((MainActivity) getActivity()).showExportFragment(fileRecords);
-            }
-        });
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_fragment_record_content, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_compare) {
+            return true;
+        } else if (id == R.id.action_export) {
+            exportPDF();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -249,6 +271,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         getSocket().on(EVENT_CLICK_RECORD, clickRecord);
         getSocket().on(EVENT_UN_FOCUS_RECORD, unFocusRecord);
         getSocket().on(EVENT_EDIT_RECORD, editRecord);
@@ -272,7 +295,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             return;
         }
         ((MainActivity) getActivity()).showLoading(true);
-        Log.e("initFileRecord: ", user.getUserId() + " xx " + app.getCurrentUser().getCookie());
+        Log.e("initFileRecord: ", user.getUserId() + " xx " + app.getCurrentUser().getCookie() + " " + fileFilm.getId());
         Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), fileFilm.getId());
 
         Disposable disposable = request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
@@ -334,14 +357,16 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         dialog.setContentView(R.layout.dialog_update_record);
         final EditText edtName = dialog.findViewById(R.id.edtName);
         final EditText edtContent = dialog.findViewById(R.id.edtContent);
-        final EditText edtHour = dialog.findViewById(R.id.edtHour);
-        final EditText edtMinutes = dialog.findViewById(R.id.edtMinutes);
-        final EditText edtSecond = dialog.findViewById(R.id.edtSecond);
+//        final EditText edtHour = dialog.findViewById(R.id.edtHour);
+//        final EditText edtMinutes = dialog.findViewById(R.id.edtMinutes);
+//        final EditText edtSecond = dialog.findViewById(R.id.edtSecond);
+        final EditText edtTime = dialog.findViewById(R.id.edtTime);
         edtName.setText(record.getSpeaker());
         edtContent.setText(record.getContent());
-        edtHour.setText(StringUtils.getHourFromTime(record.getTime()));
-        edtMinutes.setText(StringUtils.getMinuteFromTime(record.getTime()));
-        edtSecond.setText(StringUtils.getSecondFromTime(record.getTime()));
+        edtTime.setText(StringUtils.formatLongToDate(record.getTime()));
+        //   edtHour.setText(StringUtils.getHourFromTime(record.getTime()));
+        //  edtMinutes.setText(StringUtils.getMinuteFromTime(record.getTime()));
+        //   edtSecond.setText(StringUtils.getSecondFromTime(record.getTime()));
         final Button update = dialog.findViewById(R.id.btn_update);
         Button cancel = dialog.findViewById(R.id.btn_cancel);
         update.setOnClickListener(new View.OnClickListener() {
@@ -353,22 +378,21 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 else {
                     String name = edtName.getText().toString().trim();
                     String content = edtContent.getText().toString().trim();
-                    String hourString = edtHour.getText().toString().trim();
-                    String minString = edtMinutes.getText().toString().trim();
-                    String secString = edtSecond.getText().toString().trim();
+                    String date = edtTime.getText().toString().trim();
 
-                    if (StringUtils.isEmpty(name) || StringUtils.isEmpty(content) || StringUtils.isEmpty(hourString) || StringUtils.isEmpty(minString) || StringUtils.isEmpty(secString)) {
+                    if (StringUtils.isEmpty(name) || StringUtils.isEmpty(content) || StringUtils.isEmpty(date)) {
                         Toast.makeText(getContext(), getString(R.string.msg_fill_infor), Toast.LENGTH_SHORT).show();
+
+                    } else if (!StringUtils.isDateValid(date)) {
+                        Toast.makeText(getContext(), R.string.time_invalid, Toast.LENGTH_SHORT).show();
 
                     } else {
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(true);
                         }
                         ((MainActivity) getActivity()).showLoading(true);
-                        int hour = Integer.parseInt(hourString);
-                        int min = Integer.parseInt(minString);
-                        int sec = Integer.parseInt(secString);
-                        int time = StringUtils.convertTime(hour, min, sec);
+//
+                        long time = StringUtils.convertStringToLong(date);
                         UpdateRecordBody.Options options = new UpdateRecordBody.Options(record.getFileId(), name, time, content);
                         UpdateRecordBody updateRecordBody = new UpdateRecordBody();
                         updateRecordBody.setOptions(options);
@@ -401,8 +425,8 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                 }
             }
         });
-        edtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
-        edtSecond.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
+//        edtMinutes.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
+//        edtSecond.setFilters(new InputFilter[]{new InputFilterMinMax("0", "59")});
         dialog.show();
     }
 

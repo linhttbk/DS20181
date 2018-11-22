@@ -12,7 +12,11 @@ public class BodyFilePost {
     private List<Owner> owners = new ArrayList<>();
     @SerializedName("createAt")
     private long createAt;
+    @SerializedName("description")
+    private String description;
 
+    @SerializedName("date")
+    private long date;
     public String getName() {
         return name;
     }
@@ -35,5 +39,13 @@ public class BodyFilePost {
 
     public void setCreateAt(long createAt) {
         this.createAt = createAt;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
     }
 }

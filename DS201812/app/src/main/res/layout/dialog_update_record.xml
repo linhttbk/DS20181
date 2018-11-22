@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:background="@drawable/bg_edt_rounded"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_edt_rounded">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -35,8 +34,6 @@
         android:text="Người nói:" />
 
     <EditText
-        android:textCursorDrawable="@null"
-        android:textColor="@color/black"
         android:id="@+id/edtName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,7 +42,9 @@
         android:layout_marginTop="@dimen/margin_normal"
         android:layout_toRightOf="@+id/lblName"
         android:background="@drawable/bg_edt_rounded"
-        android:padding="@dimen/padding_4dp" />
+        android:padding="@dimen/padding_4dp"
+        android:textColor="@color/black"
+        android:textCursorDrawable="@null" />
 
     <TextView
         android:id="@+id/lblContent"
@@ -60,8 +59,6 @@
         android:text="Nội dung:" />
 
     <EditText
-        android:textCursorDrawable="@null"
-        android:textColor="@color/black"
         android:id="@+id/edtContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -70,7 +67,9 @@
         android:layout_marginTop="@dimen/margin_normal"
         android:layout_toRightOf="@+id/lblName"
         android:background="@drawable/bg_edt_rounded"
-        android:padding="@dimen/padding_4dp" />
+        android:padding="@dimen/padding_4dp"
+        android:textColor="@color/black"
+        android:textCursorDrawable="@null" />
 
     <TextView
         android:id="@+id/lblTime"
@@ -82,77 +81,22 @@
         android:paddingRight="@dimen/padding_4dp"
         android:text="Thời điểm:" />
 
+
     <RelativeLayout
-        android:gravity="center"
-        android:layout_below="@+id/lblTime"
         android:id="@+id/rl1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/edtHour"
-            android:layout_marginRight="@dimen/margin_normal"
-            android:layout_toLeftOf="@+id/edtHour"
-            android:text="giờ:" />
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/lblTime"
+        android:gravity="center">
 
         <EditText
-            android:gravity="center"
-            android:textCursorDrawable="@null"
-            android:textColor="@color/black"
-            android:maxLength="2"
-            android:inputType="number"
-            android:id="@+id/edtHour"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_toLeftOf="@+id/lblMinutes"
-            android:background="@drawable/bg_edt_rounded" />
-
-        <TextView
-            android:id="@+id/lblMinutes"
-            android:layout_width="wrap_content"
+            android:id="@+id/edtTime"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/edtHour"
-            android:layout_marginRight="@dimen/margin_normal"
-            android:layout_toLeftOf="@+id/edtMinutes"
-            android:text="phút:" />
-
-        <EditText
-            android:gravity="center"
-            android:textCursorDrawable="@null"
-            android:textColor="@color/black"
-            android:maxLength="2"
-            android:inputType="number"
-            android:id="@+id/edtMinutes"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:background="@drawable/bg_edt_rounded" />
-
-        <TextView
-            android:id="@+id/lblSecond"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/edtHour"
-            android:layout_marginLeft="@dimen/margin_normal"
-            android:layout_toRightOf="@+id/edtMinutes"
-            android:text="giây:" />
-
-        <EditText
-            android:textCursorDrawable="@null"
-            android:textColor="@color/black"
-            android:maxLength="2"
-            android:inputType="number"
-            android:gravity="center"
-            android:id="@+id/edtSecond"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginLeft="@dimen/margin_normal"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:layout_toRightOf="@+id/lblSecond"
-            android:background="@drawable/bg_edt_rounded" />
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginRight="@dimen/margin_large"
+            android:backgroundTint="@color/black"
+            android:textCursorDrawable="@null" />
     </RelativeLayout>
 
     <View

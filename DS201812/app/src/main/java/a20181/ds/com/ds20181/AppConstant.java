@@ -27,6 +27,8 @@ public interface AppConstant {
     String EVENT_UN_FOCUS_RECORD = "un_focus_record";
     String EVENT_EDIT_RECORD = "edit_record";
     String EVENT_IMPORT_RECORD = "create_many_record";
+    String EVENT_IMPORT_WHO = "create_data_file_who";
+    String EVENT_IMPORT_WHAT = "create_data_file_what";
 
     String POPUP_CONSTANT = "mPopup";
     String POPUP_FORCE_SHOW_ICON = "setForceShowIcon";
@@ -36,4 +38,9 @@ public interface AppConstant {
 
     int PERMISSION_READ = 1;
     int PERMISSION_WRITE = 2;
+
+    int PERMISSIONS_MULTIPLE_REQUEST = 10;
+
+    String IMAGE_PATH = "DS20181";
+    String STREAM_FILE_NAME = "%s_stream.jpg";
 }

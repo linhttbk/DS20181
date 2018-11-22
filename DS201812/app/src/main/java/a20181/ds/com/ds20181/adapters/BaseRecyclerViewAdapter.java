@@ -29,6 +29,7 @@ public abstract class BaseRecyclerViewAdapter<T>
     }
 
     public void add(List<T> itemList) {
+        if(itemList==null||itemList.isEmpty()) return;
         mDataList.addAll(itemList);
         notifyDataSetChanged();
     }

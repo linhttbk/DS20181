@@ -26,8 +26,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/margin_normal"
-                android:text="Tạo File Film"
-                android:textColor="@color/black" />
+                android:text="Tạo File biên bản cuộc họp"
+                android:textColor="@color/black"
+                android:textSize="@dimen/text_size_title" />
 
             <TextView
                 android:id="@+id/lbl1"
@@ -39,7 +40,7 @@
                 android:layout_alignTop="@+id/edtNameFile"
                 android:layout_below="@+id/titleDialog"
                 android:gravity="center_vertical"
-                android:text="Tên Film:"
+                android:text="Tên File:"
                 android:textColor="@color/black" />
 
             <EditText
@@ -53,12 +54,48 @@
                 android:backgroundTint="@color/black" />
 
             <TextView
+                android:id="@+id/lbl3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/edtDate"
+                android:layout_alignTop="@+id/edtDate"
+                android:layout_below="@+id/lbl1"
+                android:gravity="center_vertical"
+                android:text="Thời gian:"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:textColor="@color/black"
+                android:id="@+id/edtDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/edtNameFile"
+                android:layout_below="@+id/lbl1"
+                android:layout_marginTop="@dimen/radius_normal"
+                android:layout_toLeftOf="@+id/imgDate"
+                android:layout_toRightOf="@+id/lbl2"
+                android:backgroundTint="@color/black"
+                android:dropDownAnchor="@+id/autoComplete"
+                android:dropDownHeight="150dp"
+                android:enabled="false" />
+
+            <ImageView
+                android:id="@+id/imgDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/edtDate"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/edtDate"
+                android:padding="@dimen/padding_4dp"
+                android:src="@drawable/ic_date_range_black_24dp" />
+
+            <TextView
                 android:id="@+id/lbl2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@id/autoComplete"
                 android:layout_alignTop="@+id/autoComplete"
-                android:layout_below="@+id/lbl1"
+                android:layout_below="@+id/lbl3"
                 android:gravity="center_vertical"
                 android:text="Chia sẻ với:"
                 android:textColor="@color/black" />
@@ -67,8 +104,8 @@
                 android:id="@+id/autoComplete"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/edtNameFile"
-                android:layout_below="@+id/lbl1"
+                android:layout_alignLeft="@+id/edtDate"
+                android:layout_below="@+id/lbl3"
                 android:layout_marginTop="@dimen/radius_normal"
                 android:layout_toRightOf="@+id/lbl2"
                 android:backgroundTint="@color/black"
@@ -89,6 +126,31 @@
                 app:vertical_interval="10dp">
 
             </co.lujun.androidtagview.TagContainerLayout>
+
+            <TextView
+                android:id="@+id/lblDesc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/edtDesc"
+                android:layout_alignLeft="@+id/lbl2"
+                android:layout_alignRight="@+id/lbl2"
+                android:layout_alignTop="@+id/edtDesc"
+                android:layout_below="@+id/tagLayout"
+                android:gravity="center_vertical"
+                android:text="Thông tin:"
+                android:textColor="@color/black" />
+
+            <EditText
+                android:id="@+id/edtDesc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tagLayout"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginTop="@dimen/margin_large"
+                android:layout_toRightOf="@+id/lbl1"
+                android:backgroundTint="@color/black"
+                android:hint="Thông tin cuộc họp"
+                android:textColorHint="@color/divider" />
         </RelativeLayout>
     </ScrollView>
 
@@ -133,11 +195,11 @@
 
     <Button
         android:id="@+id/btnDone"
-        android:visibility="gone"
-        android:textColor="@color/white"
-        android:background="@color/bg_button_red"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="Done" />
+        android:background="@color/bg_button_red"
+        android:text="Done"
+        android:textColor="@color/white"
+        android:visibility="gone" />
 </RelativeLayout>

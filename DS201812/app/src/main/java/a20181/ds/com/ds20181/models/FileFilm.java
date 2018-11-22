@@ -50,8 +50,18 @@ public class FileFilm {
     private String creator;
     @SerializedName("createAt")
     private long createAt;
+
+    public List<Owner> getOwners() {
+        return owners;
+    }
+
     @SerializedName("owners")
     private List<Owner> owners;
+    @SerializedName("description")
+    private String description;
+
+    @SerializedName("date")
+    private long date;
 
     public boolean isHeader() {
         return isHeader;
@@ -77,6 +87,14 @@ public class FileFilm {
                 return owner.isWritable();
         }
         return false;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public long getDate() {
+        return date;
     }
 
     public static class History {

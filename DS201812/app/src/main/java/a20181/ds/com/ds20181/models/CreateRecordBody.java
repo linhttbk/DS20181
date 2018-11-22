@@ -12,11 +12,11 @@ public class CreateRecordBody {
     @SerializedName("time")
     private long time;
 
-    public  List<DataAB> getData1() {
+    public List<DataAB> getData1() {
         return dataArray1;
     }
 
-    public void setData1( List<DataAB> data1) {
+    public void setData1(List<DataAB> data1) {
         this.dataArray1 = data1;
     }
 
@@ -24,7 +24,7 @@ public class CreateRecordBody {
         return dataArray2;
     }
 
-    public void setData2( List<DataBC> data2) {
+    public void setData2(List<DataBC> data2) {
         this.dataArray2 = data2;
     }
 
@@ -37,6 +37,8 @@ public class CreateRecordBody {
         private String speaker;
         @SerializedName("time")
         private long time;
+        @SerializedName("afr")
+        private String afr;
 
         public String getSpeaker() {
             return speaker;
@@ -53,12 +55,23 @@ public class CreateRecordBody {
         public void setTime(long time) {
             this.time = time;
         }
+
+        public String getAfr() {
+            return afr;
+        }
+
+        public void setAfr(String afr) {
+            this.afr = afr;
+        }
     }
-   public static class  DataBC {
+
+    public static class DataBC {
         @SerializedName("content")
         private String content;
         @SerializedName("time")
         private long time;
+        @SerializedName("afr")
+        private String afr;
 
         public String getContent() {
             return content;
@@ -76,6 +89,13 @@ public class CreateRecordBody {
             this.time = time;
         }
 
-}
+        public String getAfr() {
+            return afr;
+        }
+
+        public void setAfr(String afr) {
+            this.afr = afr;
+        }
+    }
 
 }

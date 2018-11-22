@@ -4,13 +4,13 @@ package a20181.ds.com.ds20181.services;
 import java.util.List;
 
 import a20181.ds.com.ds20181.models.BaseResponse;
-import a20181.ds.com.ds20181.models.BodyFile;
+import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.CreateRecordBody;
 import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.FileRecord;
-import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
+import a20181.ds.com.ds20181.models.ResponseTemporary;
 import a20181.ds.com.ds20181.models.SignUpBody;
 import a20181.ds.com.ds20181.models.UpdateRecordBody;
 import io.reactivex.Observable;
@@ -44,7 +44,7 @@ public interface APIService {
     Call<BaseResponse> signUp(@Field("username") String username, @Field("name") String name, @Field("password") String password);
 
     @POST("user")
-    Call<BaseResponse> signUp(@Body SignUpBody body );
+    Call<BaseResponse> signUp(@Body SignUpBody body);
 
     @Headers({"Content-Type: application/json"})
     @GET("file")
@@ -82,6 +82,16 @@ public interface APIService {
     Observable<List<FileRecord>> importRecord(@Header("Cookie") String cookie, @Path("fileID") String fileId, @Body CreateRecordBody recordBody);
 
     @Headers({"Content-Type: application/json"})
+    @POST("record/list-data/{fileID}")
+    Observable<List<CreateRecordBody.DataAB>> importWhoData(@Header("Cookie") String cookie, @Path("fileID") String fileId, @Body CreateRecordBody recordBody);
+
+
+    @Headers({"Content-Type: application/json"})
+    @POST("record/list-data/{fileID}")
+    Observable<Response<Void>> importWhatWhoData(@Header("Cookie") String cookie, @Path("fileID") String fileId, @Body CreateRecordBody recordBody);
+
+
+    @Headers({"Content-Type: application/json"})
     @PUT("record/{id}")
     Observable<FileRecord> updateRecord(@Header("Cookie") String cookie, @Path("id") String recordId, @Body UpdateRecordBody recordBody);
 
@@ -92,6 +102,14 @@ public interface APIService {
     @Headers({"Content-Type: application/json"})
     @DELETE("record/{id}")
     Observable<BaseResponse> deleteRecord(@Header("Cookie") String cookie, @Path("id") String idRecord);
+
+    @Headers({"Content-Type: application/json"})
+    @POST("record/list-data/{fileID}")
+    Observable<List<CreateRecordBody.DataAB>> gettAllTemporyWho(@Header("Cookie") String cookie, @Path("fileID") String fileId);
+
+    @Headers({"Content-Type: application/json"})
+    @GET("temporary/{fileId}")
+    Observable<ResponseTemporary> getAllTemporary(@Header("Cookie") String cookie, @Path("fileId") String fileId);
 
 
 }

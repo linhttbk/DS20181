@@ -18,7 +18,7 @@ public class FileRecord implements Command {
     @SerializedName("content")
     private String content;
     @SerializedName("time")
-    private int time;
+    private long time;
 
     private CommandCallBack callBack;
     @SerializedName("userOn")
@@ -48,11 +48,11 @@ public class FileRecord implements Command {
         this.content = content;
     }
 
-    public int getTime() {
+    public long getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 

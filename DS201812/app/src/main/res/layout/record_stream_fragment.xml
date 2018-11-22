@@ -43,9 +43,8 @@
             android:orientation="horizontal"
             android:weightSum="2">
 
-            <fragment
+            <FrameLayout
                 android:id="@+id/fragmentAB"
-                android:name="a20181.ds.com.ds20181.fragments.StreamABFragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
@@ -55,9 +54,8 @@
                 android:layout_height="match_parent"
                 android:background="@color/divider" />
 
-            <fragment
+            <FrameLayout
                 android:id="@+id/fragmentBC"
-                android:name="a20181.ds.com.ds20181.fragments.StreamBCFragment"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />

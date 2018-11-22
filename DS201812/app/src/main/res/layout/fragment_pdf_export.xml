@@ -10,7 +10,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:gravity="center"
-        android:hint="Tên phim"
+        android:hint="Tên cuộc họp"
         android:textColorHint="@color/divider" />
 
     <RadioGroup
@@ -22,14 +22,16 @@
         android:weightSum="2">
 
         <RadioButton
+            android:buttonTint="@color/red"
             android:id="@+id/radio_type_table"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
-            android:checked="false"
+            android:checked="true"
             android:text="Table Template" />
 
         <RadioButton
+            android:buttonTint="@color/red"
             android:id="@+id/radio_type_line"
             android:layout_width="match_parent"
             android:layout_height="50dp"
@@ -40,12 +42,13 @@
     </RadioGroup>
 
     <Button
+        android:textColor="@color/white"
         android:id="@+id/btn_export_pdf"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_alignParentBottom="true"
         android:layout_weight="1"
-        android:background="@drawable/shape_button_printfile"
+        android:background="@drawable/bg_button_conner"
         android:text="Xuất file" />
 
 

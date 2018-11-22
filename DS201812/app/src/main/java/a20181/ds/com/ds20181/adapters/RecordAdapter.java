@@ -42,7 +42,7 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> implement
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int position) {
         FileRecord fileRecord = mDataList.get(position);
         ((ViewHolder) holder).tvRecorderName.setText(fileRecord.getSpeaker());
-        ((ViewHolder) holder).tvRecordTime.setText(StringUtils.timeConversion(fileRecord.getTime()));
+        ((ViewHolder) holder).tvRecordTime.setText(StringUtils.formatLongToDate(fileRecord.getTime()));
         ((ViewHolder) holder).tvRecordContent.setText(fileRecord.getContent());
         List<User> activeUserIds = fileRecord.getUserActives();
         if (activeUserIds.size() != 0) {
@@ -127,7 +127,8 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> implement
 
     @Override
     public void update(int position, FileRecord record) {
-        if (position < 0 || mDataList == null || position >= mDataList.size() || record == null) return;
+        if (position < 0 || mDataList == null || position >= mDataList.size() || record == null)
+            return;
         for (int i = 0; i < mDataList.size(); i++) {
             FileRecord item = mDataList.get(i);
             if (item.getId().equals(record.getId())) {
@@ -159,7 +160,7 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> implement
         notifyDataSetChanged();
     }
 
-    public void update(String recordId, String speaker, String content, int time) {
+    public void update(String recordId, String speaker, String content, long time) {
         for (FileRecord fileRecord : mDataList) {
             if (fileRecord.getId().equals(recordId)) {
                 fileRecord.setSpeaker(speaker);
