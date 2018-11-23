@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -95,7 +96,32 @@ public class StreamBCFragment extends BaseFragment {
     private Emitter.Listener importWhat = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            try {
+                JSONArray array = (JSONArray) args[0];
+                if (array != null) {
+                    final List<DataBC> results = new ArrayList<>();
+                    int size = array.length();
+                    for (int i = 0; i < size; i++) {
+                        JSONObject data = array.getJSONObject(i);
+                        DataBC dataBC = new DataBC();
+                        dataBC.setContent(data.getString("content"));
+                        dataBC.setTime(data.getLong("time"));
+                        results.add(dataBC);
 
+                    }
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (adapter != null)
+                                    adapter.add(results);
+                            }
+                        });
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -171,7 +197,7 @@ public class StreamBCFragment extends BaseFragment {
                 if (array != null) {
                     for (int i = 0; i < array.length(); i++) {
                         String content = array.getJSONObject(i).getString("content");
-                        int time = array.getJSONObject(i).getInt("time");
+                        long time = array.getJSONObject(i).getLong("time");
                         String afr = array.getJSONObject(i).getString("afr");
                         if (!StringUtils.isEmpty(content)) {
                             DataBC record = new DataBC();
@@ -220,7 +246,7 @@ public class StreamBCFragment extends BaseFragment {
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
                             if (voidResponse.isSuccessful() && (voidResponse.code() == CODE_200 || voidResponse.code() == CODE_204)) {
-                                adapter.add(dataBCS);
+                                Toast.makeText(getActivity(), R.string.import_file_success, Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -230,7 +256,7 @@ public class StreamBCFragment extends BaseFragment {
                     public void accept(Throwable throwable) throws Exception {
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
-                            Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.format_file_error_msg, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

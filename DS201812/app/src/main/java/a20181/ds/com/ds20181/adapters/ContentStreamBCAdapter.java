@@ -31,7 +31,7 @@ public class ContentStreamBCAdapter extends BaseRecyclerViewAdapter<DataBC> {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
-            ((ViewHolder) holder).tvTime.setText(StringUtils.formatLong2Date(getItem(position).getTime()));
+            ((ViewHolder) holder).tvTime.setText(StringUtils.formatLongToDate(getItem(position).getTime()));
             ((ViewHolder) holder).tvContent.setText(getItem(position).getContent());
         }
     }

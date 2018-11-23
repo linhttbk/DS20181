@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -50,6 +51,8 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
     RecyclerView recyclerView;
     @BindView(R.id.rlRetry)
     RelativeLayout rlRetry;
+    @BindView(R.id.swrLayout)
+    SwipeRefreshLayout swrLayout;
     FileFilmAdapter adapter;
     private List<FileFilm> mItems = new ArrayList<>();
     CompositeDisposable compositeDisposable = new CompositeDisposable();
@@ -76,6 +79,13 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
             recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             recyclerView.setAdapter(adapter);
         }
+        swrLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+
+                initFileFilm();
+            }
+        });
 
     }
 
@@ -126,6 +136,7 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                     public void accept(Object o) throws Exception {
                         if (getActivity() != null)
                             ((MainActivity) getActivity()).showLoading(false);
+                        if (swrLayout.isRefreshing()) swrLayout.setRefreshing(false);
                         List<FileFilm> result = (ArrayList) o;
                         if (result == null || result.isEmpty()) rlRetry.setVisibility(View.VISIBLE);
                         else
@@ -162,6 +173,7 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
         if (film == null || film.isHeader() || app.getCurrentUser() == null) return;
         switch (view.getId()) {
             case R.id.root:
+                Log.e("onItemClick: ", film.getId() + " " + app.getCookie());
                 ((MainActivity) getActivity()).showContentRecord(film);
                 break;
             case R.id.imgMore:
@@ -188,12 +200,12 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
-                            case R.id.share_file:
-                                popup.dismiss();
-                                break;
                             case R.id.delete_ring:
                                 popup.dismiss();
-                                deleteFile(film.getId(), position);
+                                if ( !film.isCreator(app.getCurrentUser().getUserId())) {
+                                    Toast.makeText(getContext(), R.string.can_not_delete_file_msg, Toast.LENGTH_SHORT).show();
+                                } else
+                                    deleteFile(film.getId(), position);
                                 break;
                             case R.id.info_file:
                                 popup.dismiss();
@@ -228,7 +240,7 @@ public class RecordFileFragment extends BaseFragment implements BaseRecyclerView
         ((TextView) dialog.findViewById(R.id.tvCreate)).setText(StringUtils.formatLongToDate(fileFilm.getCreateAt()));
         ((TextView) dialog.findViewById(R.id.tvCountShare)).setText(countRead + countWrite + EMPTY);
         ((TextView) dialog.findViewById(R.id.tvPer)).setText(getString((R.string.per_count), countRead, countWrite));
-        ((TextView) dialog.findViewById(R.id.tvDesc)).setText(StringUtils.isEmpty(fileFilm.getDescription()) ? fileFilm.getDescription() : getString(R.string.text_empty_desc));
+        ((TextView) dialog.findViewById(R.id.tvDesc)).setText(!StringUtils.isEmpty(fileFilm.getDescription()) ? fileFilm.getDescription() : getString(R.string.text_empty_desc));
         ((TextView) dialog.findViewById(R.id.tvDone)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

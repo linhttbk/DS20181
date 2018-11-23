@@ -32,6 +32,7 @@
             android:textColor="@color/text_second" />
 
         <TextView
+            android:paddingRight="@dimen/padding_12dp"
             android:id="@+id/tvCreate"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
             android:textColor="@color/text_second" />
 
         <TextView
+            android:paddingRight="@dimen/padding_12dp"
             android:id="@+id/tvCountShare"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -84,6 +86,7 @@
             android:textColor="@color/text_second" />
 
         <TextView
+            android:paddingRight="@dimen/padding_12dp"
             android:id="@+id/tvPer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -111,6 +114,7 @@
             android:textColor="@color/text_second" />
 
         <TextView
+            android:paddingRight="@dimen/padding_12dp"
             android:id="@+id/tvDesc"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

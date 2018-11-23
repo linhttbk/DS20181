@@ -46,11 +46,6 @@ public class FileFilmAdapter extends BaseRecyclerViewAdapter<FileFilm> implement
         if (holder instanceof HeaderHolder) {
             ((HeaderHolder) holder).tvHeader.setText(film.getName());
         } else if (holder instanceof ViewHolder) {
-            if (app.getCurrentUser() == null || !film.isCreator(app.getCurrentUser().getUserId())) {
-                ((ViewHolder) holder).imgMore.setVisibility(View.GONE);
-            } else {
-                ((ViewHolder) holder).imgMore.setVisibility(View.VISIBLE);
-            }
             ((ViewHolder) holder).tvTitle.setText(film.getName());
             String createAt = StringUtils.formatLongToDate(film.getCreateAt());
             ((ViewHolder) holder).tvDate.setText(StringUtils.isEmpty(createAt) ? AppConstant.EMPTY : createAt);

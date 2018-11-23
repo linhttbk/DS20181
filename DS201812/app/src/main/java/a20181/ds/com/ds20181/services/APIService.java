@@ -8,6 +8,7 @@ import a20181.ds.com.ds20181.models.BodyFilePost;
 import a20181.ds.com.ds20181.models.CreateRecordBody;
 import a20181.ds.com.ds20181.models.FileFilm;
 import a20181.ds.com.ds20181.models.FileRecord;
+import a20181.ds.com.ds20181.models.History;
 import a20181.ds.com.ds20181.models.ListUserResponse;
 import a20181.ds.com.ds20181.models.ResponseLogin;
 import a20181.ds.com.ds20181.models.ResponseTemporary;
@@ -111,6 +112,8 @@ public interface APIService {
     @GET("temporary/{fileId}")
     Observable<ResponseTemporary> getAllTemporary(@Header("Cookie") String cookie, @Path("fileId") String fileId);
 
-
+    @Headers({"Content-Type: application/json"})
+    @GET("file/{id}/history")
+    Observable<List<History>> getAllHistory(@Header("Cookie") String cookie, @Path("id") String id);
 }
 

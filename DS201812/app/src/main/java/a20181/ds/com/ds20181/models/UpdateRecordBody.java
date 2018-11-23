@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 public class UpdateRecordBody {
     @SerializedName("options")
     private Options options;
+    @SerializedName("timeChange")
+    private long timeChange;
 
     public Options getOptions() {
         return options;
@@ -12,6 +14,10 @@ public class UpdateRecordBody {
 
     public void setOptions(Options options) {
         this.options = options;
+    }
+
+    public void setTimeChange(long timeChange) {
+        this.timeChange = timeChange;
     }
 
     public static class Options {

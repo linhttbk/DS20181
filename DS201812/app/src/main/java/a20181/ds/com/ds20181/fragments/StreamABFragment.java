@@ -16,9 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,12 +24,12 @@ import com.google.gson.reflect.TypeToken;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -39,8 +37,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.xml.transform.Result;
 
 import a20181.ds.com.ds20181.AppAction;
 import a20181.ds.com.ds20181.AppConstant;
@@ -53,6 +49,7 @@ import a20181.ds.com.ds20181.customs.BaseFragment;
 import a20181.ds.com.ds20181.models.CreateRecordBody;
 import a20181.ds.com.ds20181.models.CreateRecordBody.*;
 import a20181.ds.com.ds20181.models.FileRecord;
+import a20181.ds.com.ds20181.models.User;
 import a20181.ds.com.ds20181.services.AppClient;
 import a20181.ds.com.ds20181.utils.FileUtil;
 import a20181.ds.com.ds20181.utils.StringUtils;
@@ -116,35 +113,34 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
     private Emitter.Listener importWho = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            try {
+                JSONArray array = (JSONArray) args[0];
+                if (array != null) {
+                    final List<DataAB> results = new ArrayList<>();
+                    int size = array.length();
+                    for (int i = 0; i < size; i++) {
+                        JSONObject data = array.getJSONObject(i);
+                        DataAB dataAB = new DataAB();
+                        dataAB.setSpeaker(data.getString("speaker"));
+                        dataAB.setTime(data.getLong("time"));
+                        results.add(dataAB);
 
+                    }
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                adapter.add(results);
+                            }
+                        });
+                    }
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
-    //    private void initTemporyRecords() {
-//        if (app.getCurrentUser() == null) return;
-//        if (getActivity() != null)
-//            ((MainActivity) getActivity()).showLoading(true);
-//        Disposable disposable = AppClient.getAPIService().gettAllTemporyWho(app.getCookie(), fileId)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Consumer<List<DataAB>>() {
-//                    @Override
-//                    public void accept(List<DataAB> dataABS) throws Exception {
-//                        if (getActivity() != null)
-//                            ((MainActivity) getActivity()).showLoading(false);
-//                        adapter.add(dataABS);
-//                    }
-//                }, new Consumer<Throwable>() {
-//                    @Override
-//                    public void accept(Throwable throwable) throws Exception {
-//                        if (getActivity() != null) {
-//                            ((MainActivity) getActivity()).showLoading(false);
-//                            Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
-//                            Log.e("accept: ", throwable.getMessage());
-//                        }
-//                    }
-//                });
-//        compositeDisposable.add(disposable);
-//    }
+
 
     @Override
     public void onItemClick(View view, int position) {
@@ -269,12 +265,13 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
                 if (array != null) {
                     for (int i = 0; i < array.length(); i++) {
                         String speaker = array.getJSONObject(i).getString("speaker");
-                        // String af = array.getJSONObject(i).getString("af");
-                        int time = array.getJSONObject(i).getInt("time");
+                        String afr = array.getJSONObject(i).getString("afr");
+                        long time = array.getJSONObject(i).getLong("time");
                         if (!StringUtils.isEmpty(speaker)) {
                             DataAB record = new DataAB();
                             record.setSpeaker(speaker);
                             record.setTime(time);
+                            record.setAfr(afr);
                             results.add(record);
                         }
                     }
@@ -290,12 +287,9 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
                         if (o instanceof ArrayList) {
                             List<DataAB> records = (ArrayList) o;
                             if (!records.isEmpty()) {
-                                CreateRecordBody createRecordBody = new CreateRecordBody();
-                                createRecordBody.setData1(records);
-                                createRecordBody.setTime(System.currentTimeMillis());
-
+                                uploadWho(records);
                             }
-                            adapter.add(records);
+
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -334,7 +328,7 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
         return adapter.getAll();
     }
 
-    private void uploadWhat(final List<DataAB> dataABS) {
+    private void uploadWho(final List<DataAB> dataABS) {
         if (app.getCurrentUser() == null || getActivity() == null) return;
         ((MainActivity) getActivity()).showLoading(true);
         CreateRecordBody createRecordBody = new CreateRecordBody();
@@ -350,7 +344,7 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
                             if (voidResponse.isSuccessful() && (voidResponse.code() == CODE_200 || voidResponse.code() == CODE_204)) {
-                                adapter.add(dataABS);
+                                Toast.makeText(getActivity(), R.string.import_file_success, Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -360,7 +354,7 @@ public class StreamABFragment extends BaseFragment implements BaseRecyclerViewAd
                     public void accept(Throwable throwable) throws Exception {
                         if (getActivity() != null) {
                             ((MainActivity) getActivity()).showLoading(false);
-                            Toast.makeText(getActivity(), throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.format_file_error_msg, Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

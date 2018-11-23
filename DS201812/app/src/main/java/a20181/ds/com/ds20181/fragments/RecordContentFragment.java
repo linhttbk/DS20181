@@ -144,11 +144,6 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                         @Override
                         public void run() {
                             recordAdapter.update(recordId, spealker, content, time);
-//                            JsonObject jsonObject = new JsonObject();
-//                            jsonObject.addProperty("userId",userActiveId);
-//                            jsonObject.addProperty("recordId", recordId);
-//                            jsonObject.addProperty("userName",app.getCurrentUser().getName());
-//                            getSocket().emit(EVENT_UN_FOCUS_RECORD,jsonObject);
 
                         }
                     });
@@ -160,6 +155,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     Emitter.Listener importRecord = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
+            Log.e("call: ", "Hello");
             try {
                 JSONArray array = (JSONArray) args[0];
                 if (array != null) {
@@ -255,6 +251,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         } else if (id == R.id.action_export) {
             exportPDF();
             return true;
+        } else if (id == R.id.action_history) {
+            if (getActivity() != null && fileFilm != null) {
+                ((MainActivity) getActivity()).switchFragment(ModifyHistoryFragment.newInstance(fileFilm.getId()));
+            }
         }
 
         return super.onOptionsItemSelected(item);
@@ -291,11 +291,10 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
     private void initFileRecord() {
 
         User user = app.getCurrentUser();
-        if (user == null) {
+        if (user == null || fileFilm == null) {
             return;
         }
         ((MainActivity) getActivity()).showLoading(true);
-        Log.e("initFileRecord: ", user.getUserId() + " xx " + app.getCurrentUser().getCookie() + " " + fileFilm.getId());
         Observable<List<FileRecord>> request = AppClient.getAPIService().getRecordFile(app.getCurrentUser().getCookie(), fileFilm.getId());
 
         Disposable disposable = request.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).
@@ -396,6 +395,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
                         UpdateRecordBody.Options options = new UpdateRecordBody.Options(record.getFileId(), name, time, content);
                         UpdateRecordBody updateRecordBody = new UpdateRecordBody();
                         updateRecordBody.setOptions(options);
+                        updateRecordBody.setTimeChange(System.currentTimeMillis());
                         dialog.dismiss();
                         updateRecord(record, updateRecordBody, position);
 
@@ -539,7 +539,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
         } else if (action == AppAction.REDO_CLICK) {
             commandStack.redo();
         } else if (action == AppAction.ADD_CLICK) {
-            if (getActivity() != null)
+            if (getActivity() != null && fileFilm != null)
                 ((MainActivity) getActivity()).switchFragment(RecordStreamFragment.newInstance(fileFilm.getId()));
         }
     }
@@ -552,6 +552,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             UpdateRecordBody.Options options = new UpdateRecordBody.Options(record.getFileId(), record.getSpeaker(), record.getTime(), record.getContent());
             UpdateRecordBody updateRecordBody = new UpdateRecordBody();
             updateRecordBody.setOptions(options);
+            updateRecordBody.setTimeChange(System.currentTimeMillis());
             String recordId = record.getId();
             FileRecord item = recordAdapter.getRecordByRecordById(recordId);
             int position = recordAdapter.getPositionByRecordById(recordId);
@@ -567,6 +568,7 @@ public class RecordContentFragment extends BaseFragment implements RecordAdapter
             UpdateRecordBody.Options options = new UpdateRecordBody.Options(record.getFileId(), record.getSpeaker(), record.getTime(), record.getContent());
             UpdateRecordBody updateRecordBody = new UpdateRecordBody();
             updateRecordBody.setOptions(options);
+            updateRecordBody.setTimeChange(System.currentTimeMillis());
             String recordId = record.getId();
             int position = recordAdapter.getPositionByRecordById(recordId);
             FileRecord item = recordAdapter.getRecordByRecordById(recordId);

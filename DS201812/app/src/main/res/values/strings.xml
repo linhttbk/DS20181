@@ -30,4 +30,7 @@
     <string name="per_count">Quyền đọc: %d, Quyền chỉnh sửa: %d</string>
     <string name="file_infor_item">Chi tiết</string>
     <string name="time_invalid">Thời gian không hợp lệ</string>
+    <string name="format_file_error_msg">File không đúng định dạng!</string>
+    <string name="import_file_success">Nhập file ghi âm thành công</string>
+    <string name="can_not_delete_file_msg">Bạn không có quyền xóa file này</string>
 </resources>

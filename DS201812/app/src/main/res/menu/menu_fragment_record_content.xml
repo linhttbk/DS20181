@@ -11,4 +11,9 @@
         android:orderInCategory="100"
         android:title="Xuất File PDF"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_history"
+        android:orderInCategory="100"
+        android:title="Lịch sử chỉnh sửa"
+        app:showAsAction="never" />
 </menu>

@@ -168,6 +168,16 @@ public class RecordAdapter extends BaseRecyclerViewAdapter<FileRecord> implement
                 fileRecord.setTime(time);
             }
         }
+        if (mDataList.size() > 0) {
+            Collections.sort(mDataList, new Comparator<FileRecord>() {
+                @Override
+                public int compare(FileRecord record, FileRecord t1) {
+                    if (record.getTime() == t1.getTime()) return 0;
+                    if (record.getTime() > t1.getTime()) return 1;
+                    return -1;
+                }
+            });
+        }
         notifyDataSetChanged();
     }
 
