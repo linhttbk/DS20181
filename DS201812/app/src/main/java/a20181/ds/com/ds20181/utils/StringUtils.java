@@ -83,6 +83,21 @@ public class StringUtils {
         return format.format(new Date());
     }
 
+    public static String getDay() {
+        SimpleDateFormat format = new SimpleDateFormat("dd");
+        return format.format(new Date());
+    }
+
+    public static String getMonth() {
+        SimpleDateFormat format = new SimpleDateFormat("MM");
+        return format.format(new Date());
+    }
+
+    public static String getYears() {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy");
+        return format.format(new Date());
+    }
+
     public static boolean isEmpty(String src) {
         return src == null || src.equals("");
     }
