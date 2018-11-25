@@ -4,9 +4,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
 import com.itextpdf.text.BaseColor;
@@ -19,7 +19,6 @@ import com.itextpdf.text.PageSize;
 import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.BaseFont;
-import com.itextpdf.text.pdf.GrayColor;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
@@ -28,7 +27,6 @@ import com.itextpdf.text.pdf.draw.LineSeparator;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import a20181.ds.com.ds20181.MainActivity;
@@ -43,19 +41,33 @@ import io.socket.client.IO;
 
 public class PdfExportFragment extends BaseFragment {
 
+    public static final String FONT_TAHOMA = "tahoma.ttf";
+    public static final String FONT_ARIAL = "arial.ttf";
+    public static final String FONT_CALIBRI = "calibri.ttf";
+    public static final String FONT_TIME_NEWS = "times.ttf";
+
+    public static final int TEMPLATE_TABLE = 0;
+    public static final int TEMPLATE_LINE = 1;
+
     @BindView(R.id.edt_film_name)
     EditText edtFilmName;
+    @BindView(R.id.edt_secretary_name)
+    EditText edtSecretaryName;
     @BindView(R.id.radio_type_table)
     RadioButton rdbTable;
     @BindView(R.id.radio_type_line)
     RadioButton rdbLine;
     @BindView(R.id.rdg_template)
     RadioGroup rdgTemplate;
+    @BindView(R.id.rdg_font)
+    RadioGroup rdgFont;
     @BindView(R.id.btn_export_pdf)
     Button btnExport;
 
     private String filmName = EMPTY;
-    private int templateType = 0;
+    private String secretaryName = EMPTY;
+    private String font = FONT_TIME_NEWS;
+    private int templateType = TEMPLATE_TABLE;
     private List<FileRecord> fileRecords;
 
     public static PdfExportFragment newInstance(List<FileRecord> fileRecords) {
@@ -85,18 +97,40 @@ public class PdfExportFragment extends BaseFragment {
 
 
     public void handleClickEvent() {
-        rdgTemplate.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        rdgTemplate.setOnCheckedChangeListener(new OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.radio_type_table:
-                        templateType = 0;
+                        templateType = TEMPLATE_TABLE;
                         break;
                     case R.id.radio_type_line:
-                        templateType = 1;
+                        templateType = TEMPLATE_LINE;
                         break;
                     default:
-                        templateType = -1;
+                        templateType = TEMPLATE_TABLE;
+                        break;
+                }
+            }
+        });
+        rdgFont.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.rb_arial:
+                        font = FONT_ARIAL;
+                        break;
+                    case R.id.rb_tahoma:
+                        font = FONT_TAHOMA;
+                        break;
+                    case R.id.rb_calibri:
+                        font = FONT_CALIBRI;
+                        break;
+                    case R.id.rb_time_news:
+                        font = FONT_TIME_NEWS;
+                        break;
+                    default:
+                        font = FONT_TIME_NEWS;
                         break;
                 }
             }
@@ -105,18 +139,17 @@ public class PdfExportFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 filmName = edtFilmName.getText().toString();
-
+                secretaryName = edtSecretaryName.getText().toString();
                 if (filmName.equals(EMPTY)) {
                     Toast.makeText(getContext(), "Hãy nhập tên phim", Toast.LENGTH_SHORT).show();
                     return;
                 }
-
-                if (templateType == -1) {
-                    Toast.makeText(getContext(), "Hãy chọn template", Toast.LENGTH_SHORT).show();
+                if (secretaryName.equals(EMPTY)) {
+                    Toast.makeText(getContext(), "Hãy nhập tên thư ký", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                createFile(fileRecords, templateType, filmName);
+                createFile(fileRecords, templateType,font, filmName,secretaryName);
                 Toast.makeText(getContext(), "Xuất file thành công", Toast.LENGTH_SHORT).show();
                 ((MainActivity) getActivity()).showListFile();
 
@@ -133,7 +166,7 @@ public class PdfExportFragment extends BaseFragment {
      * @throws IOException
      * @throws DocumentException
      */
-    private void createFile(List<FileRecord> recordList, int templateType, String filmName) {
+    private void createFile(List<FileRecord> recordList, int templateType,String pdfFont, String filmName, String secretaryName) {
         //get path
 
         Document document = new Document();
@@ -163,8 +196,9 @@ public class PdfExportFragment extends BaseFragment {
             document.addCreator("Backdoor Team");
 
             // Adding Title....
-            BaseFont font = BaseFont.createFont("res/font/times.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
+            BaseFont font = BaseFont.createFont("res/font/" + pdfFont, BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
             Font headerFont = new Font(font, 18.0f, Font.NORMAL, BaseColor.BLACK);
+            Font contentFont = new Font(font, 14.0f, Font.NORMAL, BaseColor.BLACK);
 
             //Creating Chunk
             Chunk headerChunk = new Chunk("CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM", headerFont);
@@ -188,6 +222,15 @@ public class PdfExportFragment extends BaseFragment {
             document.add(new Chunk(lineSeparator));
             document.add(new Paragraph(""));
 
+            //date time
+            Chunk dateChunk = new Chunk("Ngày " + StringUtils.getDay() +
+                    " Tháng " + StringUtils.getMonth() +
+                    " Năm " + StringUtils.getYears(), contentFont);
+            Paragraph datePara = new Paragraph(dateChunk);
+            datePara.setAlignment(Element.ALIGN_RIGHT);
+            document.add(datePara);
+
+
             //Header title
             Font headerFont3 = new Font(font, 16.0f, Font.NORMAL, BaseColor.BLACK);
             Chunk title3 = new Chunk("BIÊN BẢN CUỘC HỌP", headerFont3);
@@ -197,10 +240,16 @@ public class PdfExportFragment extends BaseFragment {
 
             //title
             Font titleFont = new Font(font, 16.0f, Font.NORMAL, BaseColor.BLACK);
-            Chunk title = new Chunk(filmName, titleFont);
+            Chunk title = new Chunk(filmName.toUpperCase(), titleFont);
             Paragraph titleParagraph = new Paragraph(title);
             titleParagraph.setAlignment(Element.ALIGN_CENTER);
             document.add(titleParagraph);
+
+            //Secretary
+            Chunk sChunk = new Chunk("Thư ký: " + secretaryName, contentFont);
+            Paragraph sPara = new Paragraph(sChunk);
+            sPara.setAlignment(Element.ALIGN_LEFT);
+            document.add(sPara);
 
             //Line seperator
             document.add(new Paragraph(""));
@@ -209,7 +258,6 @@ public class PdfExportFragment extends BaseFragment {
             document.add(new Paragraph(""));
 
             //Content file
-            Font contentFont = new Font(font, 14.0f, Font.NORMAL, BaseColor.BLACK);
             switch (templateType) {
                 //table
                 case 0:
@@ -221,9 +269,9 @@ public class PdfExportFragment extends BaseFragment {
 
                     table.getDefaultCell().setBackgroundColor(BaseColor.WHITE);
                     table.getDefaultCell().setHorizontalAlignment(Element.ALIGN_CENTER);
-                    table.addCell("Time");
-                    table.addCell("Speaker");
-                    table.addCell("Content");
+                    table.addCell(getNormalCell("Time",contentFont));
+                    table.addCell(getNormalCell("Speaker",contentFont));
+                    table.addCell(getNormalCell("Content",contentFont));
                     for (FileRecord record : recordList) {
                         table.addCell(getNormalCell(StringUtils.formatLongToDate(record.getTime()), contentFont));
                         table.addCell(getNormalCell(record.getSpeaker(), contentFont));

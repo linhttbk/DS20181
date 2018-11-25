@@ -4,42 +4,161 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edt_film_name"
+    <LinearLayout
+        android:paddingLeft="@dimen/margin_8dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:gravity="center"
-        android:hint="Tên cuộc họp"
-        android:textColorHint="@color/divider" />
+        android:orientation="horizontal">
 
-    <RadioGroup
-        android:id="@+id/rdg_template"
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:text="Tên cuộc họp:"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:paddingLeft="8dp"
+            android:id="@+id/edt_film_name"
+            android:layout_width="0dp"
+            android:layout_weight="6"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColorHint="@color/divider" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="@dimen/margin_8dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="11"
-        android:orientation="vertical"
-        android:weightSum="2">
+        android:layout_weight="1"
+        android:orientation="horizontal">
 
-        <RadioButton
-            android:buttonTint="@color/red"
-            android:id="@+id/radio_type_table"
+        <TextView
+            android:gravity="center_vertical"
+            android:layout_width="0dp"
+            android:layout_weight="3"
+            android:layout_height="match_parent"
+            android:text="Thư ký:"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:paddingLeft="8dp"
+            android:id="@+id/edt_secretary_name"
+            android:layout_width="0dp"
+            android:layout_weight="6"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textColorHint="@color/divider" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:paddingLeft="@dimen/margin_8dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="10"
+        android:orientation="vertical">
+
+        <TextView
+            android:paddingTop="@dimen/margin_8dp"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:checked="true"
-            android:text="Table Template" />
+            android:layout_height="wrap_content"
+            android:text="Font chữ cho file"
+            android:textSize="18sp"/>
 
-        <RadioButton
-            android:buttonTint="@color/red"
-            android:id="@+id/radio_type_line"
+        <RadioGroup
+            android:id="@+id/rdg_font"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentRight="true"
-            android:checked="false"
-            android:text="Line Template" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="2">
 
-    </RadioGroup>
+            <RadioButton
+                android:buttonTint="@color/red"
+                android:id="@+id/rb_time_news"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:fontFamily="@font/times"
+                android:checked="true"
+                android:text="Time News Roman" />
+
+
+            <RadioButton
+                android:buttonTint="@color/red"
+                android:id="@+id/rb_arial"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:checked="false"
+                android:fontFamily="@font/arial"
+                android:text="Arial" />
+
+
+            <RadioButton
+                android:buttonTint="@color/red"
+                android:id="@+id/rb_tahoma"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:checked="false"
+                android:fontFamily="@font/tahoma"
+                android:text="Tahoma" />
+
+
+            <RadioButton
+                android:buttonTint="@color/red"
+                android:id="@+id/rb_calibri"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:checked="false"
+                android:fontFamily="@font/calibri"
+                android:text="Calibri" />
+
+
+        </RadioGroup>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Template cuộc họp"
+            android:textSize="18sp"/>
+
+        <RadioGroup
+
+            android:id="@+id/rdg_template"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:weightSum="2">
+
+            <RadioButton
+                android:buttonTint="@color/red"
+                android:id="@+id/radio_type_table"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:checked="true"
+                android:text="Table Template" />
+
+            <RadioButton
+                android:buttonTint="@color/red"
+                android:id="@+id/radio_type_line"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:checked="false"
+                android:text="Line Template" />
+
+        </RadioGroup>
+
+    </LinearLayout>
 
     <Button
         android:textColor="@color/white"
